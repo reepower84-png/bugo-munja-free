@@ -1418,6 +1418,14 @@ body {
     letter-spacing: 1px;
 }
 
+.site-biz-info {
+    margin-top: 10px;
+    font-size: 10px;
+    color: #bbb;
+    line-height: 1.6;
+    letter-spacing: 0;
+}
+
 /* PWA 설치 프롬프트 스타일 */
 .install-prompt {
     position: fixed;
