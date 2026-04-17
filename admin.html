@@ -693,6 +693,7 @@
                         <th>이름</th>
                         <th>메시지</th>
                         <th>등록일</th>
+                        <th>관리</th>
                     </tr>
                 </thead>
                 <tbody>`;
@@ -705,11 +706,27 @@
                         <td><strong>${d.name || '-'}</strong></td>
                         <td>${d.message || '-'}</td>
                         <td style="font-size:11px;">${date}</td>
+                        <td><button class="delete-btn" onclick="deleteCondolence('${funeralId}', '${doc.id}')">삭제</button></td>
                     </tr>`;
             });
 
             html += '</tbody></table>';
             el.innerHTML = html;
+        }
+
+        // ===== 조문 메시지 삭제 =====
+        async function deleteCondolence(funeralId, condolenceId) {
+            if (!confirm('이 조문 메시지를 삭제하시겠습니까?')) return;
+
+            try {
+                await db.collection('funerals').doc(funeralId)
+                    .collection('condolences').doc(condolenceId)
+                    .delete();
+
+                loadCondolenceAdmin(funeralId);
+            } catch (error) {
+                alert('삭제에 실패했습니다.');
+            }
         }
 
         // ===== 부고 삭제 =====
