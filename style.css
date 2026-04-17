@@ -1424,6 +1424,7 @@ body {
     color: #bbb;
     line-height: 1.6;
     letter-spacing: 0;
+    padding-bottom: 80px;
 }
 
 /* PWA 설치 프롬프트 스타일 */
