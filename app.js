@@ -669,9 +669,10 @@ ${formatDate(data.funeralDate)}${timeText}`;
                 loading="lazy"
                 referrerpolicy="no-referrer-when-downgrade">
             </iframe>
-            <p style="text-align:center; margin-top:8px; font-size:12px; color:#d4c5a9; opacity:0.7;">
-                ${data.funeralHallAddress}
-            </p>
+            <div class="fp-address-row">
+                <span class="fp-address-text">${data.funeralHallAddress}</span>
+                <button class="fp-copy-addr-btn" onclick="copyToClipboard('${data.funeralHallAddress.replace(/'/g, "\\'")}'); showToast('주소가 복사되었습니다');">주소복사</button>
+            </div>
         `;
 
         // 길찾기 버튼
