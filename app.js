@@ -297,8 +297,8 @@ function generatePreviewHTML(data) {
     const term = data.deceasedTerm || '별세';
 
     let html = `<div style="text-align:center; margin-bottom:16px;">
-<strong style="font-size:17px; color:var(--primary);">${data.deceasedName}</strong>님${ageText}의
-${term}를 알려드립니다.
+<div style="font-size:17px; font-weight:700; color:var(--primary); margin-bottom:2px;">${data.deceasedName}님${ageText}</div>
+<div style="font-size:15px; font-weight:600; color:var(--primary);">${term}를 알려드립니다.</div>
 </div>
 
 <div style="padding: 12px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin: 12px 0;">
