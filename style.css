@@ -666,6 +666,244 @@ body {
     color: #fff;
 }
 
+/* ===== 부고 페이지 조문/화환 섹션 ===== */
+.fp-section {
+    margin-top: 28px;
+    background: rgba(255,255,255,0.06);
+    border-radius: var(--radius);
+    padding: 24px 20px;
+    border: 1px solid rgba(212,197,169,0.15);
+}
+
+.fp-section-title {
+    color: #d4c5a9;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 16px;
+    letter-spacing: 2px;
+}
+
+.fp-section-desc {
+    color: #b09a7a;
+    font-size: 13px;
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+/* 조문 메시지 */
+.fp-condolence-list {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 16px;
+}
+
+.fp-condolence-item {
+    background: rgba(255,255,255,0.05);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    border: 1px solid rgba(212,197,169,0.1);
+}
+
+.fp-condolence-item .name {
+    font-size: 13px;
+    font-weight: 700;
+    color: #d4c5a9;
+    margin-bottom: 4px;
+}
+
+.fp-condolence-item .msg {
+    font-size: 13px;
+    color: #e0d8cc;
+    line-height: 1.5;
+}
+
+.fp-condolence-item .time {
+    font-size: 11px;
+    color: #8b7355;
+    margin-top: 6px;
+}
+
+.fp-condolence-input {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.fp-condolence-input input,
+.fp-condolence-input textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid rgba(212,197,169,0.25);
+    border-radius: 8px;
+    font-size: 14px;
+    color: #e0d8cc;
+    background: rgba(255,255,255,0.05);
+    font-family: inherit;
+}
+
+.fp-condolence-input input::placeholder,
+.fp-condolence-input textarea::placeholder {
+    color: #8b7355;
+}
+
+.fp-condolence-input input:focus,
+.fp-condolence-input textarea:focus {
+    outline: none;
+    border-color: #d4c5a9;
+}
+
+.fp-condolence-submit {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+}
+
+.fp-condolence-empty {
+    text-align: center;
+    color: #8b7355;
+    font-size: 13px;
+    padding: 16px 0;
+}
+
+/* 화환 보내기 버튼 */
+.fp-wreath-open-btn {
+    background: linear-gradient(135deg, #8b5e3c 0%, #a67c52 100%);
+}
+
+/* 화환 모달 */
+.wreath-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+
+.wreath-modal-content {
+    background: #1e1e32;
+    border-radius: var(--radius);
+    width: 100%;
+    max-width: 460px;
+    max-height: 90vh;
+    overflow-y: auto;
+    border: 1px solid rgba(212,197,169,0.2);
+}
+
+.wreath-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(212,197,169,0.15);
+}
+
+.wreath-modal-header h3 {
+    color: #d4c5a9;
+    font-size: 16px;
+    letter-spacing: 1px;
+}
+
+.wreath-modal-close {
+    background: none;
+    border: none;
+    color: #d4c5a9;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0 4px;
+}
+
+.wreath-modal-body {
+    padding: 16px 20px 24px;
+}
+
+.wreath-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.wreath-item {
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.2s, transform 0.15s;
+}
+
+.wreath-item:active {
+    transform: scale(0.97);
+}
+
+.wreath-item.selected {
+    border-color: #d4c5a9;
+    background: rgba(212,197,169,0.1);
+}
+
+.wreath-item img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.wreath-item span {
+    display: block;
+    font-size: 12px;
+    color: #e0d8cc;
+    font-weight: 600;
+}
+
+.wreath-form {
+    border-top: 1px solid rgba(212,197,169,0.15);
+    padding-top: 16px;
+}
+
+.wreath-selected-info {
+    text-align: center;
+    color: #d4c5a9;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    padding: 10px;
+    background: rgba(212,197,169,0.1);
+    border-radius: 8px;
+}
+
+.wreath-form .form-group label {
+    color: #d4c5a9;
+}
+
+.wreath-form .form-group input {
+    color: #e0d8cc;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(212,197,169,0.25);
+}
+
+.wreath-form .form-group input::placeholder {
+    color: #8b7355;
+}
+
+.wreath-form .form-group input:focus {
+    outline: none;
+    border-color: #d4c5a9;
+    background: rgba(255,255,255,0.08);
+}
+
+.wreath-form .btn-primary {
+    background: linear-gradient(135deg, #8b5e3c 0%, #a67c52 100%);
+    margin-top: 8px;
+}
+
 /* ===== 반응형 ===== */
 
 /* 일반 모바일 (480px 이하) */
@@ -739,6 +977,22 @@ body {
     .account-item .form-row {
         flex-direction: column;
         gap: 0;
+    }
+
+    .fp-section {
+        padding: 20px 14px;
+    }
+
+    .wreath-modal-body {
+        padding: 12px 14px 20px;
+    }
+
+    .wreath-grid {
+        gap: 8px;
+    }
+
+    .wreath-item span {
+        font-size: 11px;
     }
 }
 
@@ -848,6 +1102,30 @@ body {
 
     .fp-footer {
         margin-top: 20px;
+    }
+
+    .fp-section {
+        padding: 16px 12px;
+    }
+
+    .fp-section-title {
+        font-size: 14px;
+    }
+
+    .wreath-grid {
+        gap: 6px;
+    }
+
+    .wreath-item {
+        padding: 8px;
+    }
+
+    .wreath-item span {
+        font-size: 10px;
+    }
+
+    .wreath-modal-content {
+        max-height: 85vh;
     }
 }
 

@@ -312,8 +312,89 @@
                         📍 네이버지도로 길찾기
                     </button>
                 </div>
+
+                <!-- 조문 메시지 -->
+                <div class="fp-section" id="fpCondolenceSection" style="display:none;">
+                    <h3 class="fp-section-title">💐 조문 메시지</h3>
+                    <div id="fpCondolenceList" class="fp-condolence-list"></div>
+                    <div class="fp-condolence-input">
+                        <input type="text" id="fpCondolenceName" placeholder="이름" maxlength="20">
+                        <textarea id="fpCondolenceMsg" rows="2" placeholder="조문 메시지를 남겨주세요" maxlength="200"></textarea>
+                        <button class="btn-primary fp-condolence-submit" onclick="submitCondolence()">메시지 남기기</button>
+                    </div>
+                </div>
+
+                <!-- 근조화환 마음 보내기 -->
+                <div class="fp-section" id="fpWreathSection" style="display:none;">
+                    <h3 class="fp-section-title">🌷 근조화환 마음 보내기</h3>
+                    <p class="fp-section-desc">마음을 담아 화환을 보내보세요.</p>
+                    <button class="btn-primary fp-wreath-open-btn" onclick="openWreathModal()">근조화환 보내기</button>
+                </div>
             </div>
         </section>
+
+        <!-- 화환 접수 모달 -->
+        <div id="wreathModal" class="wreath-modal" style="display:none;">
+            <div class="wreath-modal-content">
+                <div class="wreath-modal-header">
+                    <h3>🌷 근조화환 접수</h3>
+                    <button class="wreath-modal-close" onclick="closeWreathModal()">&times;</button>
+                </div>
+                <div class="wreath-modal-body">
+                    <div class="wreath-grid">
+                        <div class="wreath-item" onclick="selectWreath(this, '근조 3단 화환')">
+                            <img src="images/근조 3단 화환.jpg" alt="근조 3단 화환">
+                            <span>근조 3단 화환</span>
+                        </div>
+                        <div class="wreath-item" onclick="selectWreath(this, '근조 고급 3단 화환')">
+                            <img src="images/근조 고급 3단 화환.jpg" alt="근조 고급 3단 화환">
+                            <span>근조 고급 3단 화환</span>
+                        </div>
+                        <div class="wreath-item" onclick="selectWreath(this, '근조 특대 3단 화환')">
+                            <img src="images/근조 특대 3단 화환.jpg" alt="근조 특대 3단 화환">
+                            <span>근조 특대 3단 화환</span>
+                        </div>
+                        <div class="wreath-item" onclick="selectWreath(this, '근조 특특대 3단 화환')">
+                            <img src="images/근조 특특대 3단 화환.jpg" alt="근조 특특대 3단 화환">
+                            <span>근조 특특대 3단 화환</span>
+                        </div>
+                        <div class="wreath-item" onclick="selectWreath(this, '근조 4단 화환')">
+                            <img src="images/근조 4단 화환.jpg" alt="근조 4단 화환">
+                            <span>근조 4단 화환</span>
+                        </div>
+                        <div class="wreath-item" onclick="selectWreath(this, '근조 영정바구니')">
+                            <img src="images/근조 영정바구니.jpg" alt="근조 영정바구니">
+                            <span>근조 영정바구니</span>
+                        </div>
+                        <div class="wreath-item" onclick="selectWreath(this, '근조 오브제')">
+                            <img src="images/근조 오브제.jpg" alt="근조 오브제">
+                            <span>근조 오브제</span>
+                        </div>
+                        <div class="wreath-item" onclick="selectWreath(this, '근조 쌀화환')">
+                            <img src="images/근조 쌀화환.jpg" alt="근조 쌀화환">
+                            <span>근조 쌀화환</span>
+                        </div>
+                    </div>
+
+                    <div id="wreathForm" class="wreath-form" style="display:none;">
+                        <div class="wreath-selected-info" id="wreathSelectedInfo"></div>
+                        <div class="form-group">
+                            <label>보내시는 분 성함 <span class="required">*</span></label>
+                            <input type="text" id="wreathSenderName" placeholder="예: 홍길동">
+                        </div>
+                        <div class="form-group">
+                            <label>연락처 <span class="required">*</span></label>
+                            <input type="tel" id="wreathSenderPhone" placeholder="예: 010-1234-5678">
+                        </div>
+                        <div class="form-group">
+                            <label>리본 문구</label>
+                            <input type="text" id="wreathRibbon" placeholder="예: 삼가 고인의 명복을 빕니다 (선택)">
+                        </div>
+                        <button class="btn-primary" onclick="submitWreath()">접수하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- 토스트 메시지 -->
         <div id="toast" class="toast"></div>

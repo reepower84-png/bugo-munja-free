@@ -687,6 +687,164 @@ ${formatDate(data.funeralDate)}${timeText}`;
             window.open(`https://map.naver.com/v5/search/${encodeURIComponent(data.funeralHallAddress)}`, '_blank');
         };
     }
+
+    // 조문 메시지 섹션 표시
+    const condolenceSection = document.getElementById('fpCondolenceSection');
+    condolenceSection.style.display = 'block';
+    currentFuneralId = getFuneralId();
+    loadCondolences();
+
+    // 화환 섹션 표시
+    const wreathSection = document.getElementById('fpWreathSection');
+    wreathSection.style.display = 'block';
+}
+
+// ===== 현재 부고 ID 가져오기 =====
+let currentFuneralId = null;
+
+function getFuneralId() {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('id') || window.location.hash.replace('#funeral=', '').substring(0, 10);
+}
+
+// ===== 조문 메시지 =====
+async function loadCondolences() {
+    if (!currentFuneralId || typeof db === 'undefined') return;
+
+    const listEl = document.getElementById('fpCondolenceList');
+
+    try {
+        const snapshot = await db.collection('funerals').doc(currentFuneralId)
+            .collection('condolences')
+            .orderBy('createdAt', 'desc')
+            .limit(50)
+            .get();
+
+        if (snapshot.empty) {
+            listEl.innerHTML = '<div class="fp-condolence-empty">아직 조문 메시지가 없습니다.</div>';
+            return;
+        }
+
+        listEl.innerHTML = '';
+        snapshot.forEach(doc => {
+            const d = doc.data();
+            const time = d.createdAt ? formatCondolenceTime(d.createdAt.toDate()) : '';
+            const item = document.createElement('div');
+            item.className = 'fp-condolence-item';
+            item.innerHTML = `
+                <div class="name">${escapeHtml(d.name)}</div>
+                <div class="msg">${escapeHtml(d.message)}</div>
+                <div class="time">${time}</div>
+            `;
+            listEl.appendChild(item);
+        });
+    } catch (error) {
+        listEl.innerHTML = '<div class="fp-condolence-empty">메시지를 불러올 수 없습니다.</div>';
+    }
+}
+
+function formatCondolenceTime(date) {
+    const m = date.getMonth() + 1;
+    const d = date.getDate();
+    const h = date.getHours();
+    const min = String(date.getMinutes()).padStart(2, '0');
+    return `${m}/${d} ${h}:${min}`;
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+async function submitCondolence() {
+    const name = document.getElementById('fpCondolenceName').value.trim();
+    const message = document.getElementById('fpCondolenceMsg').value.trim();
+
+    if (!name) { showToast('이름을 입력해 주세요'); return; }
+    if (!message) { showToast('메시지를 입력해 주세요'); return; }
+    if (!currentFuneralId || typeof db === 'undefined') {
+        showToast('메시지를 저장할 수 없습니다');
+        return;
+    }
+
+    try {
+        await db.collection('funerals').doc(currentFuneralId)
+            .collection('condolences')
+            .add({
+                name: name,
+                message: message,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+        document.getElementById('fpCondolenceName').value = '';
+        document.getElementById('fpCondolenceMsg').value = '';
+        showToast('조문 메시지가 등록되었습니다');
+        loadCondolences();
+    } catch (error) {
+        showToast('등록에 실패했습니다. 다시 시도해 주세요');
+    }
+}
+
+// ===== 근조화환 =====
+let selectedWreath = null;
+
+function openWreathModal() {
+    document.getElementById('wreathModal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    selectedWreath = null;
+    document.querySelectorAll('.wreath-item').forEach(i => i.classList.remove('selected'));
+    document.getElementById('wreathForm').style.display = 'none';
+}
+
+function closeWreathModal() {
+    document.getElementById('wreathModal').style.display = 'none';
+    document.body.style.overflow = '';
+}
+
+function selectWreath(el, name) {
+    document.querySelectorAll('.wreath-item').forEach(i => i.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedWreath = name;
+
+    document.getElementById('wreathSelectedInfo').textContent = `선택: ${name}`;
+    document.getElementById('wreathForm').style.display = 'block';
+    document.getElementById('wreathForm').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+async function submitWreath() {
+    const senderName = document.getElementById('wreathSenderName').value.trim();
+    const senderPhone = document.getElementById('wreathSenderPhone').value.trim();
+    const ribbon = document.getElementById('wreathRibbon').value.trim();
+
+    if (!selectedWreath) { showToast('화환을 선택해 주세요'); return; }
+    if (!senderName) { showToast('성함을 입력해 주세요'); return; }
+    if (!senderPhone) { showToast('연락처를 입력해 주세요'); return; }
+
+    if (!currentFuneralId || typeof db === 'undefined') {
+        showToast('접수할 수 없습니다');
+        return;
+    }
+
+    try {
+        await db.collection('funerals').doc(currentFuneralId)
+            .collection('wreaths')
+            .add({
+                wreath: selectedWreath,
+                senderName: senderName,
+                senderPhone: senderPhone,
+                ribbon: ribbon || '삼가 고인의 명복을 빕니다',
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+        showToast('화환 접수가 완료되었습니다');
+        closeWreathModal();
+        document.getElementById('wreathSenderName').value = '';
+        document.getElementById('wreathSenderPhone').value = '';
+        document.getElementById('wreathRibbon').value = '';
+    } catch (error) {
+        showToast('접수에 실패했습니다. 다시 시도해 주세요');
+    }
 }
 
 // ===== URL 체크 (공유 링크 처리) =====
