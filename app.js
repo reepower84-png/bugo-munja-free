@@ -746,6 +746,7 @@ ${formatDate(data.funeralDate)}${timeText}`;
     // 화환 섹션 표시
     const wreathSection = document.getElementById('fpWreathSection');
     wreathSection.style.display = 'block';
+    loadWreathSenders();
 }
 
 // ===== 현재 부고 ID 가져오기 =====
@@ -924,8 +925,47 @@ async function submitWreath() {
         document.getElementById('wreathSenderName').value = '';
         document.getElementById('wreathSenderPhone').value = '';
         document.getElementById('wreathRibbon').value = '';
+        loadWreathSenders();
     } catch (error) {
         showToast('접수에 실패했습니다. 다시 시도해 주세요');
+    }
+}
+
+// ===== 화환 보내신 분 목록 =====
+async function loadWreathSenders() {
+    if (!currentFuneralId || typeof db === 'undefined') return;
+
+    const listEl = document.getElementById('fpWreathSenderList');
+
+    try {
+        const snapshot = await db.collection('funerals').doc(currentFuneralId)
+            .collection('wreaths')
+            .orderBy('createdAt', 'desc')
+            .get();
+
+        if (snapshot.empty) {
+            listEl.innerHTML = '';
+            return;
+        }
+
+        let html = '<div class="fp-wreath-sender-title">근조화환 보내신 분</div>';
+
+        snapshot.forEach(doc => {
+            const d = doc.data();
+            const date = d.createdAt ? formatCondolenceTime(d.createdAt.toDate()) : '';
+            html += `
+                <div class="fp-wreath-sender-item">
+                    <div>
+                        <div class="fp-wreath-sender-name">${escapeHtml(d.senderName)} - ${escapeHtml(d.wreath)}</div>
+                        <div class="fp-wreath-sender-ribbon">${escapeHtml(d.ribbon || '삼가 고인의 명복을 빕니다')}</div>
+                    </div>
+                    <div class="fp-wreath-sender-date">${date}</div>
+                </div>`;
+        });
+
+        listEl.innerHTML = html;
+    } catch (e) {
+        // 조용히 실패
     }
 }
 
