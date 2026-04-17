@@ -654,19 +654,32 @@ ${formatDate(data.funeralDate)}${timeText}`;
 
     document.getElementById('fpBody').textContent = body;
 
-    // 길찾기 버튼
+    // 지도 & 길찾기 버튼
     if (data.funeralHallAddress) {
+        // 지도 표시
+        const mapContainer = document.getElementById('fpMap');
+        const query = encodeURIComponent(data.funeralHallAddress);
+        mapContainer.innerHTML = `
+            <iframe
+                src="https://maps.google.com/maps?q=${query}&output=embed&hl=ko"
+                width="100%"
+                height="250"
+                style="border:0; border-radius:12px;"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+            <p style="text-align:center; margin-top:8px; font-size:12px; color:#d4c5a9; opacity:0.7;">
+                ${data.funeralHallAddress}
+            </p>
+        `;
+
+        // 길찾기 버튼
         const navBtn = document.getElementById('fpNavBtn');
         navBtn.style.display = 'block';
         navBtn.onclick = () => {
-            const query = encodeURIComponent(data.funeralHallAddress);
             // 네이버 지도 우선
-            if (/Android/i.test(navigator.userAgent)) {
-                window.location.href = `nmap://search?query=${query}`;
-                setTimeout(() => {
-                    window.location.href = `https://map.naver.com/v5/search/${query}`;
-                }, 500);
-            } else if (/iPhone|iPad/i.test(navigator.userAgent)) {
+            if (/Android|iPhone|iPad/i.test(navigator.userAgent)) {
                 window.location.href = `nmap://search?query=${query}`;
                 setTimeout(() => {
                     window.location.href = `https://map.naver.com/v5/search/${query}`;
