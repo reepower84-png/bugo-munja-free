@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>부고 알림 - 관리자</title>
+    <style>
+        :root {
+            --primary: #2c2c3e;
+            --accent: #8b7355;
+            --bg: #f5f3f0;
+            --bg-card: #ffffff;
+            --text: #2c2c2c;
+            --text-light: #6b6b6b;
+            --border: #e5e0da;
+            --radius: 12px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px 16px;
+        }
+
+        /* 로그인 */
+        #loginScreen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+            gap: 16px;
+        }
+
+        #loginScreen h1 {
+            font-size: 22px;
+            color: var(--primary);
+        }
+
+        #loginScreen input {
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            width: 280px;
+            text-align: center;
+        }
+
+        #loginScreen button {
+            padding: 12px 40px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        #loginScreen .error {
+            color: #c0392b;
+            font-size: 13px;
+        }
+
+        /* 헤더 */
+        .admin-header {
+            background: var(--primary);
+            color: #fff;
+            padding: 20px;
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-header h1 {
+            font-size: 18px;
+            letter-spacing: 1px;
+        }
+
+        .admin-header button {
+            padding: 6px 14px;
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        /* 탭 */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+
+        /* 통계 */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 16px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .stat-card .number {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-card .label {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+
+        /* 카드 */
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-header h3 {
+            font-size: 15px;
+            color: var(--primary);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .badge-blue { background: #e8f0fe; color: #1a73e8; }
+        .badge-green { background: #e6f4ea; color: #137333; }
+        .badge-orange { background: #fef3e0; color: #e65100; }
+
+        /* 테이블 */
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        th {
+            background: #f8f6f3;
+            padding: 10px 12px;
+            text-align: left;
+            font-weight: 700;
+            color: var(--text-light);
+            border-bottom: 2px solid var(--border);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        tr:hover td {
+            background: #faf8f5;
+        }
+
+        .no-data {
+            text-align: center;
+            color: var(--text-light);
+            padding: 40px 0;
+            font-size: 14px;
+        }
+
+        /* 부고 목록 아이템 */
+        .funeral-item {
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .funeral-item:hover {
+            background: #faf8f5;
+        }
+
+        .funeral-name {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .funeral-date {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .funeral-id {
+            font-size: 11px;
+            color: var(--accent);
+            font-family: monospace;
+        }
+
+        /* 상세 뒤로가기 */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 16px;
+        }
+
+        /* 금액 강조 */
+        .price {
+            font-weight: 700;
+            color: #e65100;
+        }
+
+        /* 로딩 */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-light);
+        }
+
+        /* 반응형 */
+        @media (max-width: 480px) {
+            .stats {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+
+            .stat-card .number {
+                font-size: 22px;
+            }
+
+            .stat-card .label {
+                font-size: 11px;
+            }
+
+            table { font-size: 12px; }
+            th, td { padding: 8px; }
+
+            .tabs { gap: 4px; }
+            .tab { font-size: 12px; padding: 10px 6px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 로그인 화면 -->
+        <div id="loginScreen">
+            <h1>🔒 관리자 로그인</h1>
+            <input type="password" id="adminPw" placeholder="비밀번호 입력" onkeydown="if(event.key==='Enter') adminLogin()">
+            <button onclick="adminLogin()">로그인</button>
+            <div id="loginError" class="error"></div>
+        </div>
+
+        <!-- 관리자 대시보드 -->
+        <div id="adminDashboard" style="display:none;">
+            <div class="admin-header">
+                <h1>📋 관리자 대시보드</h1>
+                <button onclick="adminLogout()">로그아웃</button>
+            </div>
+
+            <!-- 통계 -->
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="number" id="statFunerals">-</div>
+                    <div class="label">전체 부고</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number" id="statWreaths">-</div>
+                    <div class="label">화환 접수</div>
+                </div>
+                <div class="stat-card">
+                    <div class="number" id="statCondolences">-</div>
+                    <div class="label">조문 메시지</div>
+                </div>
+            </div>
+
+            <!-- 부고 목록 -->
+            <div id="funeralListView">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>부고 목록</h3>
+                    </div>
+                    <div id="funeralList" class="table-wrap">
+                        <div class="loading">불러오는 중...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 부고 상세 -->
+            <div id="funeralDetailView" style="display:none;">
+                <button class="back-btn" onclick="showFuneralList()">← 목록으로</button>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 id="detailTitle">부고 정보</h3>
+                    </div>
+                    <div id="detailInfo"></div>
+                </div>
+
+                <div class="tabs">
+                    <div class="tab active" onclick="switchTab('wreaths', this)">🌷 화환 접수</div>
+                    <div class="tab" onclick="switchTab('condolences', this)">💐 조문 메시지</div>
+                </div>
+
+                <div id="wreathsTab" class="card">
+                    <div id="wreathList" class="table-wrap">
+                        <div class="loading">불러오는 중...</div>
+                    </div>
+                </div>
+
+                <div id="condolencesTab" class="card" style="display:none;">
+                    <div id="condolenceList" class="table-wrap">
+                        <div class="loading">불러오는 중...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    <script>
+        // ===== 관리자 비밀번호 (변경하세요) =====
+        const ADMIN_PASSWORD = 'bugo2026!';
+
+        // ===== 로그인 =====
+        function adminLogin() {
+            const pw = document.getElementById('adminPw').value;
+            if (pw === ADMIN_PASSWORD) {
+                sessionStorage.setItem('adminAuth', 'true');
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('adminDashboard').style.display = 'block';
+                loadFunerals();
+            } else {
+                document.getElementById('loginError').textContent = '비밀번호가 올바르지 않습니다.';
+            }
+        }
+
+        function adminLogout() {
+            sessionStorage.removeItem('adminAuth');
+            location.reload();
+        }
+
+        // 세션 체크
+        if (sessionStorage.getItem('adminAuth') === 'true') {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('adminDashboard').style.display = 'block';
+            loadFunerals();
+        }
+
+        // ===== 부고 목록 =====
+        let allFunerals = [];
+        let totalWreaths = 0;
+        let totalCondolences = 0;
+
+        async function loadFunerals() {
+            const snapshot = await db.collection('funerals')
+                .orderBy('createdAt', 'desc')
+                .get();
+
+            allFunerals = [];
+            totalWreaths = 0;
+            totalCondolences = 0;
+
+            for (const doc of snapshot.docs) {
+                const data = doc.data();
+                data.id = doc.id;
+
+                // 하위 컬렉션 개수
+                const wreathSnap = await db.collection('funerals').doc(doc.id).collection('wreaths').get();
+                const condolenceSnap = await db.collection('funerals').doc(doc.id).collection('condolences').get();
+                data.wreathCount = wreathSnap.size;
+                data.condolenceCount = condolenceSnap.size;
+
+                totalWreaths += data.wreathCount;
+                totalCondolences += data.condolenceCount;
+
+                allFunerals.push(data);
+            }
+
+            document.getElementById('statFunerals').textContent = allFunerals.length;
+            document.getElementById('statWreaths').textContent = totalWreaths;
+            document.getElementById('statCondolences').textContent = totalCondolences;
+
+            renderFuneralList();
+        }
+
+        function renderFuneralList() {
+            const el = document.getElementById('funeralList');
+
+            if (allFunerals.length === 0) {
+                el.innerHTML = '<div class="no-data">등록된 부고가 없습니다.</div>';
+                return;
+            }
+
+            let html = `<table>
+                <thead>
+                    <tr>
+                        <th>고인</th>
+                        <th>빈소</th>
+                        <th>발인</th>
+                        <th>화환</th>
+                        <th>조문</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+
+            allFunerals.forEach(f => {
+                const date = f.funeralDate || '-';
+                html += `
+                    <tr class="funeral-item" onclick="showFuneralDetail('${f.id}')">
+                        <td>
+                            <div class="funeral-name">${f.deceasedName || '-'}</div>
+                            <div class="funeral-id">${f.id}</div>
+                        </td>
+                        <td>${f.funeralHall || '-'}</td>
+                        <td><div class="funeral-date">${date}</div></td>
+                        <td><span class="badge badge-orange">${f.wreathCount}</span></td>
+                        <td><span class="badge badge-blue">${f.condolenceCount}</span></td>
+                    </tr>`;
+            });
+
+            html += '</tbody></table>';
+            el.innerHTML = html;
+        }
+
+        // ===== 부고 상세 =====
+        async function showFuneralDetail(id) {
+            document.getElementById('funeralListView').style.display = 'none';
+            document.getElementById('funeralDetailView').style.display = 'block';
+
+            const f = allFunerals.find(x => x.id === id);
+            if (!f) return;
+
+            document.getElementById('detailTitle').textContent = `${f.deceasedName || ''} - 부고 정보`;
+
+            const mourners = (f.mourners || []).map(m => m.relation ? `${m.relation} ${m.name}` : m.name).join(', ');
+            const accounts = (f.accounts || []).map(a => `${a.bank} ${a.number} (${a.holder})`).join('<br>');
+
+            document.getElementById('detailInfo').innerHTML = `
+                <table>
+                    <tr><th style="width:80px">고인</th><td>${f.deceasedName || '-'} ${f.deceasedAge ? '(향년 ' + f.deceasedAge + '세)' : ''}</td></tr>
+                    <tr><th>임종</th><td>${f.deceasedTerm || '별세'}</td></tr>
+                    <tr><th>상주</th><td>${mourners || '-'}</td></tr>
+                    <tr><th>빈소</th><td>${f.funeralHall || '-'} ${f.funeralRoom || ''}</td></tr>
+                    <tr><th>발인</th><td>${f.funeralDate || '-'} ${f.funeralTime || ''}</td></tr>
+                    <tr><th>주소</th><td>${f.funeralHallAddress || '-'}</td></tr>
+                    <tr><th>연락처</th><td>${f.funeralHallPhone || '-'}</td></tr>
+                    ${f.funeralPlace ? `<tr><th>장지</th><td>${f.funeralPlace}</td></tr>` : ''}
+                    ${accounts ? `<tr><th>계좌</th><td>${accounts}</td></tr>` : ''}
+                    <tr><th>부고 링크</th><td><a href="index.html?id=${f.id}" target="_blank" style="color:var(--accent);">열기</a></td></tr>
+                </table>
+            `;
+
+            // 화환 목록 로드
+            loadWreaths(id);
+            loadCondolenceAdmin(id);
+        }
+
+        function showFuneralList() {
+            document.getElementById('funeralListView').style.display = 'block';
+            document.getElementById('funeralDetailView').style.display = 'none';
+        }
+
+        // ===== 탭 전환 =====
+        function switchTab(tab, el) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById('wreathsTab').style.display = tab === 'wreaths' ? 'block' : 'none';
+            document.getElementById('condolencesTab').style.display = tab === 'condolences' ? 'block' : 'none';
+        }
+
+        // ===== 화환 목록 =====
+        async function loadWreaths(funeralId) {
+            const el = document.getElementById('wreathList');
+            el.innerHTML = '<div class="loading">불러오는 중...</div>';
+
+            const snapshot = await db.collection('funerals').doc(funeralId)
+                .collection('wreaths')
+                .orderBy('createdAt', 'desc')
+                .get();
+
+            if (snapshot.empty) {
+                el.innerHTML = '<div class="no-data">접수된 화환이 없습니다.</div>';
+                return;
+            }
+
+            let totalPrice = 0;
+            let html = `<table>
+                <thead>
+                    <tr>
+                        <th>화환</th>
+                        <th>금액</th>
+                        <th>보내신 분</th>
+                        <th>연락처</th>
+                        <th>리본 문구</th>
+                        <th>접수일</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+
+            snapshot.forEach(doc => {
+                const d = doc.data();
+                const price = d.price || 0;
+                totalPrice += price;
+                const date = d.createdAt ? formatDate(d.createdAt.toDate()) : '-';
+                html += `
+                    <tr>
+                        <td><strong>${d.wreath || '-'}</strong></td>
+                        <td class="price">${price.toLocaleString()}원</td>
+                        <td>${d.senderName || '-'}</td>
+                        <td>${d.senderPhone || '-'}</td>
+                        <td>${d.ribbon || '-'}</td>
+                        <td style="font-size:11px;">${date}</td>
+                    </tr>`;
+            });
+
+            html += `</tbody>
+                <tfoot>
+                    <tr>
+                        <td><strong>합계 (${snapshot.size}건)</strong></td>
+                        <td class="price"><strong>${totalPrice.toLocaleString()}원</strong></td>
+                        <td colspan="4"></td>
+                    </tr>
+                </tfoot>
+            </table>`;
+
+            el.innerHTML = html;
+        }
+
+        // ===== 조문 메시지 목록 =====
+        async function loadCondolenceAdmin(funeralId) {
+            const el = document.getElementById('condolenceList');
+            el.innerHTML = '<div class="loading">불러오는 중...</div>';
+
+            const snapshot = await db.collection('funerals').doc(funeralId)
+                .collection('condolences')
+                .orderBy('createdAt', 'desc')
+                .get();
+
+            if (snapshot.empty) {
+                el.innerHTML = '<div class="no-data">등록된 조문 메시지가 없습니다.</div>';
+                return;
+            }
+
+            let html = `<table>
+                <thead>
+                    <tr>
+                        <th>이름</th>
+                        <th>메시지</th>
+                        <th>등록일</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+
+            snapshot.forEach(doc => {
+                const d = doc.data();
+                const date = d.createdAt ? formatDate(d.createdAt.toDate()) : '-';
+                html += `
+                    <tr>
+                        <td><strong>${d.name || '-'}</strong></td>
+                        <td>${d.message || '-'}</td>
+                        <td style="font-size:11px;">${date}</td>
+                    </tr>`;
+            });
+
+            html += '</tbody></table>';
+            el.innerHTML = html;
+        }
+
+        // ===== 날짜 포맷 =====
+        function formatDate(date) {
+            const y = date.getFullYear();
+            const m = String(date.getMonth() + 1).padStart(2, '0');
+            const d = String(date.getDate()).padStart(2, '0');
+            const h = String(date.getHours()).padStart(2, '0');
+            const min = String(date.getMinutes()).padStart(2, '0');
+            return `${y}-${m}-${d} ${h}:${min}`;
+        }
+    </script>
+</body>
+</html>
