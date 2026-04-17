@@ -599,9 +599,12 @@ function resetForm() {
 
 // ===== 부고 페이지 렌더링 (공유 링크 열었을 때) =====
 function renderFuneralPage(data) {
-    // 메인 앱 숨기기
+    // 메인 앱 전체 숨기기
     document.querySelector('.header').style.display = 'none';
     document.querySelector('.step-indicator').style.display = 'none';
+    document.getElementById('step1').style.display = 'none';
+    document.getElementById('step2').style.display = 'none';
+    document.getElementById('step3').style.display = 'none';
 
     const page = document.getElementById('funeralPage');
     page.style.display = 'block';
