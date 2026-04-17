@@ -1,6 +1,24 @@
 // ===== 상태 관리 =====
 let currentStep = 1;
 
+// ===== Discord 웹훅 =====
+const DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1457406206602776741/A-dGhbpVt6HzwSNJVguZ1OLf-ngkyO1NkucsW_aE8p4sIa_b_CG93Cbf-FKjDZWf7ZMS';
+
+async function sendDiscordNotification(embed) {
+    try {
+        await fetch(DISCORD_WEBHOOK, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                username: '부고문자무료발송',
+                embeds: [embed]
+            })
+        });
+    } catch (e) {
+        // 알림 실패해도 무시
+    }
+}
+
 // ===== 스텝 이동 =====
 function goToStep(step) {
     if (step === 2) {
@@ -347,6 +365,23 @@ async function generateShareData() {
             const shareUrl = `${baseUrl}?id=${shortId}`;
             document.getElementById('shareUrl').value = shareUrl;
             generateQR(shareUrl);
+
+            // Discord 알림 - 부고 생성
+            const mournerText = data.mourners.map(m => m.relation ? `${m.relation} ${m.name}` : m.name).join(', ');
+            sendDiscordNotification({
+                title: '📋 새 부고 등록',
+                color: 0x2c2c3e,
+                fields: [
+                    { name: '고인', value: `${data.deceasedName} ${data.deceasedAge ? '(향년 ' + data.deceasedAge + '세)' : ''}`, inline: true },
+                    { name: '임종', value: data.deceasedTerm || '별세', inline: true },
+                    { name: '상주', value: mournerText || '-' },
+                    { name: '빈소', value: `${data.funeralHall} ${data.funeralRoom || ''}`, inline: true },
+                    { name: '발인', value: data.funeralDate || '-', inline: true },
+                    { name: '부고 링크', value: shareUrl }
+                ],
+                footer: { text: '부고문자무료발송' },
+                timestamp: new Date().toISOString()
+            });
 
             if (navigator.share) {
                 document.getElementById('nativeShareBtn').style.display = 'flex';
@@ -777,6 +812,19 @@ async function submitCondolence() {
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             });
 
+        // Discord 알림 - 조문 메시지
+        sendDiscordNotification({
+            title: '💐 조문 메시지',
+            color: 0x8b7355,
+            fields: [
+                { name: '이름', value: name, inline: true },
+                { name: '메시지', value: message },
+                { name: '부고 ID', value: currentFuneralId || '-' }
+            ],
+            footer: { text: '부고문자무료발송' },
+            timestamp: new Date().toISOString()
+        });
+
         document.getElementById('fpCondolenceName').value = '';
         document.getElementById('fpCondolenceMsg').value = '';
         showToast('조문 메시지가 등록되었습니다');
@@ -840,6 +888,22 @@ async function submitWreath() {
                 ribbon: ribbon || '삼가 고인의 명복을 빕니다',
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             });
+
+        // Discord 알림 - 화환 접수
+        sendDiscordNotification({
+            title: '🌷 화환 접수',
+            color: 0x8b5e3c,
+            fields: [
+                { name: '화환', value: selectedWreath, inline: true },
+                { name: '금액', value: selectedWreathPrice ? selectedWreathPrice.toLocaleString() + '원' : '-', inline: true },
+                { name: '보내신 분', value: senderName, inline: true },
+                { name: '연락처', value: senderPhone, inline: true },
+                { name: '리본 문구', value: ribbon || '삼가 고인의 명복을 빕니다' },
+                { name: '부고 ID', value: currentFuneralId || '-' }
+            ],
+            footer: { text: '부고문자무료발송' },
+            timestamp: new Date().toISOString()
+        });
 
         showToast('화환 접수가 완료되었습니다');
         closeWreathModal();
