@@ -590,9 +590,25 @@ body {
     overflow: hidden;
 }
 
-.fp-nav-btn {
+.fp-nav-btns {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
     margin-top: 16px;
+}
+
+.fp-nav-btn {
     background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+}
+
+.fp-nav-btn.kakao-nav {
+    background: linear-gradient(135deg, #FEE500 0%, #F5DC00 100%);
+    color: #3C1E1E;
+}
+
+.fp-nav-btn.naver-nav {
+    background: linear-gradient(135deg, #03C75A 0%, #02B550 100%);
+    color: #fff;
 }
 
 /* ===== 반응형 ===== */

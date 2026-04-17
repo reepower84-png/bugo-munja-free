@@ -305,9 +305,14 @@
                     <div class="fp-flower-bottom">🌸</div>
                 </div>
                 <div class="fp-map" id="fpMap"></div>
-                <button class="btn-primary fp-nav-btn" id="fpNavBtn" style="display:none;" onclick="openNavigation()">
-                    📍 길찾기
-                </button>
+                <div id="fpNavBtns" class="fp-nav-btns" style="display:none;">
+                    <button class="btn-primary fp-nav-btn kakao-nav" id="fpNavBtnKakao">
+                        📍 카카오맵으로 길찾기
+                    </button>
+                    <button class="btn-primary fp-nav-btn naver-nav" id="fpNavBtnNaver">
+                        📍 네이버지도로 길찾기
+                    </button>
+                </div>
             </div>
         </section>
 

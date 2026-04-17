@@ -674,12 +674,16 @@ ${formatDate(data.funeralDate)}${timeText}`;
             </p>
         `;
 
-        // 길찾기 버튼 (카카오맵)
-        const navBtn = document.getElementById('fpNavBtn');
-        navBtn.style.display = 'block';
-        navBtn.onclick = () => {
-            const kakaoUrl = `https://map.kakao.com/link/search/${encodeURIComponent(data.funeralHallAddress)}`;
-            window.open(kakaoUrl, '_blank');
+        // 길찾기 버튼
+        const navBtns = document.getElementById('fpNavBtns');
+        navBtns.style.display = 'flex';
+
+        document.getElementById('fpNavBtnKakao').onclick = () => {
+            window.open(`https://map.kakao.com/link/search/${encodeURIComponent(data.funeralHallAddress)}`, '_blank');
+        };
+
+        document.getElementById('fpNavBtnNaver').onclick = () => {
+            window.open(`https://map.naver.com/v5/search/${encodeURIComponent(data.funeralHallAddress)}`, '_blank');
         };
     }
 }
