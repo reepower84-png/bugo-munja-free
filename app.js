@@ -4,20 +4,17 @@ let currentStep = 1;
 // ===== Discord 웹훅 =====
 const DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1457406206602776741/A-dGhbpVt6HzwSNJVguZ1OLf-ngkyO1NkucsW_aE8p4sIa_b_CG93Cbf-FKjDZWf7ZMS';
 
-function sendDiscordNotification(embed) {
+// Firebase에 알림 큐 저장 (관리자 페이지에서 Discord로 전송)
+async function sendDiscordNotification(embed) {
+    if (typeof db === 'undefined') return;
     try {
-        const payload = {
-            username: '부고문자무료발송',
-            embeds: [embed]
-        };
-
-        // XMLHttpRequest로 전송 (CORS 제한 우회)
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', DISCORD_WEBHOOK, true);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.send(JSON.stringify(payload));
+        await db.collection('notifications').add({
+            embed: embed,
+            sent: false,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
     } catch (e) {
-        // 알림 실패해도 무시
+        // 알림 저장 실패해도 무시
     }
 }
 

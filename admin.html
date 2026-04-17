@@ -426,6 +426,7 @@
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('adminDashboard').style.display = 'block';
                 loadFunerals();
+                processNotifications();
             } else {
                 document.getElementById('loginError').textContent = '비밀번호가 올바르지 않습니다.';
             }
@@ -441,6 +442,7 @@
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('adminDashboard').style.display = 'block';
             loadFunerals();
+            processNotifications();
         }
 
         // ===== 부고 목록 =====
@@ -730,6 +732,44 @@
                 alert('삭제에 실패했습니다.');
             }
         }
+
+        // ===== Discord 알림 전송 (관리자 페이지에서 실행) =====
+        const DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1457406206602776741/A-dGhbpVt6HzwSNJVguZ1OLf-ngkyO1NkucsW_aE8p4sIa_b_CG93Cbf-FKjDZWf7ZMS';
+
+        async function processNotifications() {
+            try {
+                const snapshot = await db.collection('notifications')
+                    .where('sent', '==', false)
+                    .orderBy('createdAt', 'asc')
+                    .limit(20)
+                    .get();
+
+                for (const doc of snapshot.docs) {
+                    const data = doc.data();
+                    try {
+                        const res = await fetch(DISCORD_WEBHOOK, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                username: '부고문자무료발송',
+                                embeds: [data.embed]
+                            })
+                        });
+
+                        if (res.ok || res.status === 204) {
+                            await doc.ref.update({ sent: true });
+                        }
+                    } catch (e) {
+                        // 개별 알림 실패 시 다음 알림 시도
+                    }
+                }
+            } catch (e) {
+                // 조용히 실패
+            }
+        }
+
+        // 관리자 페이지 로드 시 + 30초마다 알림 전송
+        setInterval(processNotifications, 30000);
 
         // ===== 날짜 포맷 =====
         function formatDate(date) {
