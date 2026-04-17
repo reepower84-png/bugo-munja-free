@@ -788,6 +788,7 @@ async function submitCondolence() {
 
 // ===== 근조화환 =====
 let selectedWreath = null;
+let selectedWreathPrice = null;
 
 function openWreathModal() {
     document.getElementById('wreathModal').style.display = 'flex';
@@ -802,12 +803,14 @@ function closeWreathModal() {
     document.body.style.overflow = '';
 }
 
-function selectWreath(el, name) {
+function selectWreath(el, name, price) {
     document.querySelectorAll('.wreath-item').forEach(i => i.classList.remove('selected'));
     el.classList.add('selected');
     selectedWreath = name;
+    selectedWreathPrice = price;
 
-    document.getElementById('wreathSelectedInfo').textContent = `선택: ${name}`;
+    const priceText = price ? price.toLocaleString() + '원' : '';
+    document.getElementById('wreathSelectedInfo').textContent = `선택: ${name} / ${priceText}`;
     document.getElementById('wreathForm').style.display = 'block';
     document.getElementById('wreathForm').scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
@@ -831,6 +834,7 @@ async function submitWreath() {
             .collection('wreaths')
             .add({
                 wreath: selectedWreath,
+                price: selectedWreathPrice,
                 senderName: senderName,
                 senderPhone: senderPhone,
                 ribbon: ribbon || '삼가 고인의 명복을 빕니다',

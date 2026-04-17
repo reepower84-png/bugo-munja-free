@@ -863,6 +863,13 @@ body {
     font-weight: 600;
 }
 
+.wreath-price {
+    color: #f0c040 !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    margin-top: 4px;
+}
+
 .wreath-form {
     border-top: 1px solid rgba(212,197,169,0.15);
     padding-top: 16px;
