@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1a1a2e">
+    <meta name="description" content="무료 부고 문자 발송 서비스 - 간편하게 부고 알림을 보내세요">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="부고알림">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="icons/icon-192.svg">
+    <link rel="apple-touch-icon" href="icons/icon-192.svg">
+    <title>부고 문자 무료 발송</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- 헤더 -->
+        <header class="header">
+            <div class="header-inner">
+                <div class="logo">
+                    <span class="logo-icon">🕯️</span>
+                    <h1>부고 알림</h1>
+                </div>
+                <p class="subtitle">무료 부고 문자 발송 서비스</p>
+            </div>
+        </header>
+
+        <!-- 스텝 인디케이터 -->
+        <div class="step-indicator">
+            <div class="step active" data-step="1">
+                <div class="step-number">1</div>
+                <span>정보 입력</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" data-step="2">
+                <div class="step-number">2</div>
+                <span>미리보기</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" data-step="3">
+                <div class="step-number">3</div>
+                <span>발송</span>
+            </div>
+        </div>
+
+        <!-- 스텝 1: 정보 입력 -->
+        <section id="step1" class="section active">
+            <div class="card">
+                <h2 class="card-title">고인 정보</h2>
+                <div class="form-group">
+                    <label for="deceasedName">고인 성함 <span class="required">*</span></label>
+                    <input type="text" id="deceasedName" placeholder="예: 홍길동">
+                </div>
+                <div class="form-group">
+                    <label for="deceasedTerm">임종 용어</label>
+                    <select id="deceasedTerm">
+                        <option value="별세">별세 (일반)</option>
+                        <option value="영면">영면 (일반/격식)</option>
+                        <option value="소천">소천 (기독교)</option>
+                        <option value="선종">선종 (천주교)</option>
+                        <option value="입적">입적 (불교)</option>
+                        <option value="열반">열반 (불교)</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="deceasedAge">향년</label>
+                        <input type="number" id="deceasedAge" placeholder="예: 85 (선택)">
+                    </div>
+                    <div class="form-group">
+                        <label for="deceasedGender">성별</label>
+                        <select id="deceasedGender">
+                            <option value="">선택</option>
+                            <option value="male">남성</option>
+                            <option value="female">여성</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">상주 정보</h2>
+                <div id="chiefMournerList">
+                    <div class="mourner-item">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>관계 <span class="required">*</span></label>
+                                <select class="mournerRelation">
+                                    <option value="">선택</option>
+                                    <option value="장남">장남</option>
+                                    <option value="차남">차남</option>
+                                    <option value="장녀">장녀</option>
+                                    <option value="차녀">차녀</option>
+                                    <option value="배우자">배우자</option>
+                                    <option value="아들">아들</option>
+                                    <option value="딸">딸</option>
+                                    <option value="손자">손자</option>
+                                    <option value="손녀">손녀</option>
+                                    <option value="형제">형제</option>
+                                    <option value="자매">자매</option>
+                                    <option value="기타">기타</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>성함 <span class="required">*</span></label>
+                                <input type="text" class="mournerName" placeholder="예: 홍영희">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn-add" onclick="addMourner()">
+                    + 상주 추가
+                </button>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">장례 정보</h2>
+                <div class="form-group">
+                    <label for="funeralHall">빈소 <span class="required">*</span></label>
+                    <input type="text" id="funeralHall" placeholder="예: 서울대학교병원 장례식장">
+                </div>
+                <div class="form-group">
+                    <label for="funeralRoom">호실</label>
+                    <input type="text" id="funeralRoom" placeholder="예: 특1호실 (선택)">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="funeralDate">발인 날짜 <span class="required">*</span></label>
+                        <input type="date" id="funeralDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="funeralTime">발인 시간</label>
+                        <input type="time" id="funeralTime" value="07:00">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="funeralHallAddress">빈소 주소</label>
+                    <input type="text" id="funeralHallAddress" placeholder="예: 서울시 종로구 대학로 101 (선택)">
+                </div>
+                <div class="form-group">
+                    <label for="funeralHallPhone">빈소 연락처</label>
+                    <input type="tel" id="funeralHallPhone" placeholder="예: 02-1234-5678 (선택)">
+                </div>
+                <div class="form-group">
+                    <label for="funeralPlace">장지</label>
+                    <input type="text" id="funeralPlace" placeholder="예: 서울추모공원 (선택)">
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">추가 설정</h2>
+                <div class="form-group">
+                    <label for="messageStyle">문자 스타일</label>
+                    <select id="messageStyle">
+                        <option value="formal">격식체 (공식적)</option>
+                        <option value="semi">반격식체 (일반적)</option>
+                        <option value="simple">간결체 (심플)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="additionalMessage">추가 메시지 (알리는 글)</label>
+                    <textarea id="additionalMessage" rows="3" placeholder="예: 추가로 전달할 내용이 있으면 입력하세요 (선택)"></textarea>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">마음 전하는 곳 <span style="font-size:12px; font-weight:400; color:var(--text-muted);">(선택사항)</span></h2>
+                <p class="card-desc">부의금을 보내실 분들을 위한 계좌 정보입니다.</p>
+                <div id="accountList">
+                    <div class="account-item">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>은행</label>
+                                <select class="accountBank">
+                                    <option value="">선택</option>
+                                    <option value="국민은행">국민은행</option>
+                                    <option value="신한은행">신한은행</option>
+                                    <option value="하나은행">하나은행</option>
+                                    <option value="우리은행">우리은행</option>
+                                    <option value="NH농협">NH농협</option>
+                                    <option value="IBK기업">IBK기업</option>
+                                    <option value="카카오뱅크">카카오뱅크</option>
+                                    <option value="토스뱅크">토스뱅크</option>
+                                    <option value="케이뱅크">케이뱅크</option>
+                                    <option value="SC제일">SC제일</option>
+                                    <option value="대구은행">대구은행</option>
+                                    <option value="부산은행">부산은행</option>
+                                    <option value="광주은행">광주은행</option>
+                                    <option value="경남은행">경남은행</option>
+                                    <option value="전북은행">전북은행</option>
+                                    <option value="제주은행">제주은행</option>
+                                    <option value="수협은행">수협은행</option>
+                                    <option value="우체국">우체국</option>
+                                    <option value="새마을금고">새마을금고</option>
+                                    <option value="신협">신협</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>예금주</label>
+                                <input type="text" class="accountHolder" placeholder="예: 홍길동 (선택)">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>계좌번호</label>
+                            <input type="text" class="accountNumber" placeholder="예: 123-456-789012 (선택)">
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn-add" onclick="addAccount()">
+                    + 계좌 추가
+                </button>
+            </div>
+
+            <button class="btn-primary" onclick="goToStep(2)">미리보기 →</button>
+        </section>
+
+        <!-- 스텝 2: 미리보기 -->
+        <section id="step2" class="section">
+            <div class="card preview-card">
+                <div class="preview-header">
+                    <span class="preview-flower">🌸</span>
+                    <h2>부고 알림</h2>
+                    <div class="preview-divider"></div>
+                </div>
+                <div id="previewContent" class="preview-content"></div>
+                <div class="preview-footer">
+                    <div class="preview-divider"></div>
+                    <span class="preview-flower">🌸</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">문자 메시지 미리보기</h2>
+                <div class="sms-preview">
+                    <div id="smsPreview" class="sms-bubble"></div>
+                </div>
+            </div>
+
+            <div class="btn-row">
+                <button class="btn-secondary" onclick="goToStep(1)">← 수정하기</button>
+                <button class="btn-primary" onclick="goToStep(3)">발송하기 →</button>
+            </div>
+        </section>
+
+        <!-- 스텝 3: 발송 -->
+        <section id="step3" class="section">
+            <div class="card">
+                <h2 class="card-title">부고 문자 발송</h2>
+                <p class="card-desc">아래 방법으로 부고 소식을 전달하세요.</p>
+
+                <div class="share-buttons">
+                    <button class="share-btn kakao" onclick="shareKakao()">
+                        <span class="share-icon">💬</span>
+                        <span>카카오톡 공유</span>
+                    </button>
+                    <button class="share-btn sms" onclick="shareSMS()">
+                        <span class="share-icon">📱</span>
+                        <span>SMS 문자 보내기</span>
+                    </button>
+                    <button class="share-btn copy" onclick="copyMessage()">
+                        <span class="share-icon">📋</span>
+                        <span>문자 내용 복사</span>
+                    </button>
+                    <button class="share-btn link" onclick="shareLink()">
+                        <span class="share-icon">🔗</span>
+                        <span>링크 공유</span>
+                    </button>
+                    <button class="share-btn native" onclick="shareNative()" id="nativeShareBtn" style="display:none;">
+                        <span class="share-icon">📤</span>
+                        <span>공유하기</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">부고 페이지 공유</h2>
+                <p class="card-desc">아래 QR코드를 스캔하거나 링크를 공유하세요.</p>
+                <div id="qrCode" class="qr-container"></div>
+                <div class="link-copy-box">
+                    <input type="text" id="shareUrl" readonly>
+                    <button onclick="copyLink()">복사</button>
+                </div>
+            </div>
+
+            <div class="btn-row">
+                <button class="btn-secondary" onclick="goToStep(2)">← 미리보기</button>
+                <button class="btn-outline" onclick="resetForm()">새로 작성</button>
+            </div>
+        </section>
+
+        <!-- 부고 페이지 (공유용) -->
+        <section id="funeralPage" class="section funeral-page" style="display:none;">
+            <div class="funeral-page-content">
+                <div class="fp-header">
+                    <div class="fp-flower-top">🕯️</div>
+                    <h1 class="fp-title">부 고</h1>
+                    <div class="fp-line"></div>
+                </div>
+                <div id="fpBody" class="fp-body"></div>
+                <div class="fp-footer">
+                    <div class="fp-line"></div>
+                    <p class="fp-condolence">삼가 고인의 명복을 빕니다</p>
+                    <div class="fp-flower-bottom">🌸</div>
+                </div>
+                <div class="fp-map" id="fpMap"></div>
+                <button class="btn-primary fp-nav-btn" id="fpNavBtn" style="display:none;" onclick="openNavigation()">
+                    📍 길찾기
+                </button>
+            </div>
+        </section>
+
+        <!-- 토스트 메시지 -->
+        <div id="toast" class="toast"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

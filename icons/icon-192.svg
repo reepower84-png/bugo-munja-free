@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <rect width="192" height="192" rx="40" fill="#1a1a2e"/>
+  <text x="96" y="80" text-anchor="middle" font-size="60">🕯️</text>
+  <text x="96" y="130" text-anchor="middle" font-family="sans-serif" font-size="28" font-weight="bold" fill="#d4c5a9">부고</text>
+  <text x="96" y="158" text-anchor="middle" font-family="sans-serif" font-size="16" fill="#8b7355">알림</text>
+</svg>
