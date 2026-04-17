@@ -1,21 +1,36 @@
 // ===== 상태 관리 =====
 let currentStep = 1;
 
-// ===== Discord 웹훅 =====
-const DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1457406206602776741/A-dGhbpVt6HzwSNJVguZ1OLf-ngkyO1NkucsW_aE8p4sIa_b_CG93Cbf-FKjDZWf7ZMS';
+// ===== 텔레그램 알림 =====
+const TELEGRAM_BOT_TOKEN = '8124413385:AAHY7vYtJwHIt2eJ2bb9YdES6-NUrHlTCYk';
+const TELEGRAM_CHAT_ID = '5454616674';
 
-// Firebase에 알림 큐 저장 (관리자 페이지에서 Discord로 전송)
-async function sendDiscordNotification(embed) {
-    if (typeof db === 'undefined') return;
+async function sendTelegramNotification(message) {
     try {
-        await db.collection('notifications').add({
-            embed: embed,
-            sent: false,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: TELEGRAM_CHAT_ID,
+                text: message,
+                parse_mode: 'HTML'
+            })
         });
     } catch (e) {
-        // 알림 저장 실패해도 무시
+        // 알림 실패해도 무시
     }
+}
+
+// 기존 호환용 - embed를 텔레그램 텍스트로 변환
+function sendDiscordNotification(embed) {
+    let msg = `<b>${embed.title || ''}</b>\n\n`;
+    if (embed.fields) {
+        embed.fields.forEach(f => {
+            msg += `<b>${f.name}:</b> ${f.value}\n`;
+        });
+    }
+    msg += `\n— 부고문자무료발송`;
+    sendTelegramNotification(msg);
 }
 
 // ===== 스텝 이동 =====
