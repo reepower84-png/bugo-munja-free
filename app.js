@@ -620,8 +620,8 @@ function renderFuneralPage(data) {
 
     const term = data.deceasedTerm || '별세';
 
-    let body = `${data.deceasedName}님 ${ageText}
-${term}를 알려드립니다.
+    let body = `<div style="font-size:20px; font-weight:700; margin-bottom:4px;">${data.deceasedName}님 ${ageText}</div>
+<div style="font-size:18px; font-weight:600; margin-bottom:16px;">${term}를 알려드립니다.</div>
 
 ━━━
 
@@ -652,7 +652,7 @@ ${formatDate(data.funeralDate)}${timeText}`;
         body += `\n\n━━━\n\n마음 전하는 곳\n\n${data.accounts.map(a => `${a.bank} ${a.number}\n(${a.holder})`).join('\n\n')}`;
     }
 
-    document.getElementById('fpBody').textContent = body;
+    document.getElementById('fpBody').innerHTML = body;
 
     // 지도 & 길찾기 버튼
     if (data.funeralHallAddress) {
