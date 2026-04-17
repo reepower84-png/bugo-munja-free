@@ -897,7 +897,7 @@ function toggleRibbonSuggest() {
 }
 
 function selectRibbon(text) {
-    document.getElementById('wreathRibbonBottom').value = text;
+    document.getElementById('wreathRibbonTop').value = text;
     document.getElementById('ribbonSuggestList').style.display = 'none';
 }
 
@@ -913,15 +913,15 @@ async function submitWreath() {
     const orderName = document.getElementById('wreathOrderName').value.trim();
     const orderPhone = document.getElementById('wreathOrderPhone').value.trim();
     const ribbonTop = document.getElementById('wreathRibbonTop').value.trim();
-    const ribbonBottom = document.getElementById('wreathRibbonBottom').value.trim();
     const fromName = document.getElementById('wreathFromName').value.trim();
     const agree = document.getElementById('wreathAgree').checked;
 
-    const ribbon = [ribbonTop, ribbonBottom].filter(Boolean).join(' / ') || '삼가 고인의 명복을 빕니다';
+    const ribbon = ribbonTop || '삼가 고인의 명복을 빕니다';
 
     if (!selectedWreath) { showToast('화환을 선택해 주세요'); return; }
     if (!receiverName) { showToast('받는분 성함을 입력해 주세요'); return; }
     if (!receiverPhone) { showToast('받는분 연락처를 입력해 주세요'); return; }
+    if (!fromName) { showToast('보내는 분을 입력해 주세요'); return; }
     if (!agree) { showToast('개인정보 수집 및 이용에 동의해 주세요'); return; }
 
     if (!currentFuneralId || typeof db === 'undefined') {
@@ -991,7 +991,6 @@ async function submitWreath() {
         document.getElementById('wreathSenderName').value = '';
         document.getElementById('wreathSenderPhone').value = '';
         document.getElementById('wreathRibbonTop').value = '';
-        document.getElementById('wreathRibbonBottom').value = '';
         document.getElementById('wreathFromName').value = '';
         document.getElementById('wreathAgree').checked = false;
         loadWreathSenders();
