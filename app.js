@@ -6,24 +6,16 @@ const DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1457406206602776741/A-
 
 function sendDiscordNotification(embed) {
     try {
-        const payload = JSON.stringify({
+        const payload = {
             username: '부고문자무료발송',
             embeds: [embed]
-        });
+        };
 
-        // navigator.sendBeacon으로 먼저 시도 (CORS 우회)
-        const blob = new Blob([payload], { type: 'application/json' });
-        const sent = navigator.sendBeacon(DISCORD_WEBHOOK, blob);
-
-        // sendBeacon 실패 시 fetch no-cors 모드로 시도
-        if (!sent) {
-            fetch(DISCORD_WEBHOOK, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: payload,
-                mode: 'no-cors'
-            }).catch(() => {});
-        }
+        // XMLHttpRequest로 전송 (CORS 제한 우회)
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', DISCORD_WEBHOOK, true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify(payload));
     } catch (e) {
         // 알림 실패해도 무시
     }
