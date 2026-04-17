@@ -496,6 +496,7 @@
                         <th>발인</th>
                         <th>화환</th>
                         <th>조문</th>
+                        <th>관리</th>
                     </tr>
                 </thead>
                 <tbody>`;
@@ -503,15 +504,16 @@
             allFunerals.forEach(f => {
                 const date = f.funeralDate || '-';
                 html += `
-                    <tr class="funeral-item" onclick="showFuneralDetail('${f.id}')">
-                        <td>
+                    <tr class="funeral-item">
+                        <td onclick="showFuneralDetail('${f.id}')" style="cursor:pointer;">
                             <div class="funeral-name">${f.deceasedName || '-'}</div>
                             <div class="funeral-id">${f.id}</div>
                         </td>
-                        <td>${f.funeralHall || '-'}</td>
-                        <td><div class="funeral-date">${date}</div></td>
+                        <td onclick="showFuneralDetail('${f.id}')" style="cursor:pointer;">${f.funeralHall || '-'}</td>
+                        <td onclick="showFuneralDetail('${f.id}')" style="cursor:pointer;"><div class="funeral-date">${date}</div></td>
                         <td><span class="badge badge-orange">${f.wreathCount}</span></td>
                         <td><span class="badge badge-blue">${f.condolenceCount}</span></td>
+                        <td><button class="delete-btn" onclick="deleteFuneral('${f.id}')">삭제</button></td>
                     </tr>`;
             });
 
@@ -706,6 +708,27 @@
 
             html += '</tbody></table>';
             el.innerHTML = html;
+        }
+
+        // ===== 부고 삭제 =====
+        async function deleteFuneral(funeralId) {
+            if (!confirm('이 부고를 삭제하시겠습니까?\n(화환 접수, 조문 메시지도 모두 삭제됩니다)')) return;
+
+            try {
+                // 하위 컬렉션 삭제
+                const wreaths = await db.collection('funerals').doc(funeralId).collection('wreaths').get();
+                const condolences = await db.collection('funerals').doc(funeralId).collection('condolences').get();
+
+                const batch = db.batch();
+                wreaths.forEach(doc => batch.delete(doc.ref));
+                condolences.forEach(doc => batch.delete(doc.ref));
+                batch.delete(db.collection('funerals').doc(funeralId));
+
+                await batch.commit();
+                loadFunerals();
+            } catch (error) {
+                alert('삭제에 실패했습니다.');
+            }
         }
 
         // ===== 날짜 포맷 =====
