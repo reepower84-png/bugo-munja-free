@@ -877,13 +877,14 @@ body {
 
 .wreath-selected-info {
     text-align: center;
-    color: #d4c5a9;
-    font-size: 14px;
-    font-weight: 600;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
     margin-bottom: 16px;
-    padding: 10px;
-    background: rgba(212,197,169,0.1);
+    padding: 12px;
+    background: #c0392b;
     border-radius: 8px;
+    border: 1px solid #e74c3c;
 }
 
 .wreath-form .form-group label {
