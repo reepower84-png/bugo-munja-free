@@ -336,20 +336,31 @@ ${data.accounts.map(a => `${a.bank} ${a.number} (${a.holder})`).join('\n')}</div
 }
 
 // ===== 공유 데이터 생성 =====
-function generateShareData() {
+async function generateShareData() {
     const data = getFormData();
-
-    // 부고 페이지 데이터를 URL 해시에 인코딩
-    const encoded = encodeFormData(data);
     const baseUrl = window.location.origin + window.location.pathname;
+
+    // Firebase에 저장 시도
+    if (typeof saveFuneralData === 'function') {
+        const shortId = await saveFuneralData(data);
+        if (shortId) {
+            const shareUrl = `${baseUrl}?id=${shortId}`;
+            document.getElementById('shareUrl').value = shareUrl;
+            generateQR(shareUrl);
+
+            if (navigator.share) {
+                document.getElementById('nativeShareBtn').style.display = 'flex';
+            }
+            return;
+        }
+    }
+
+    // Firebase 실패 시 기존 방식 (URL 해시)
+    const encoded = encodeFormData(data);
     const shareUrl = `${baseUrl}#funeral=${encoded}`;
-
     document.getElementById('shareUrl').value = shareUrl;
-
-    // QR 코드 생성
     generateQR(shareUrl);
 
-    // 네이티브 공유 API 체크
     if (navigator.share) {
         document.getElementById('nativeShareBtn').style.display = 'flex';
     }
@@ -664,8 +675,26 @@ ${formatDate(data.funeralDate)}${timeText}`;
     }
 }
 
-// ===== URL 해시 체크 (공유 링크 처리) =====
-function checkHash() {
+// ===== URL 체크 (공유 링크 처리) =====
+async function checkUrl() {
+    // 1. ?id= 파라미터 체크 (Firebase 짧은 URL)
+    const params = new URLSearchParams(window.location.search);
+    const shortId = params.get('id');
+    if (shortId && typeof loadFuneralData === 'function') {
+        try {
+            const data = await loadFuneralData(shortId);
+            if (data) {
+                renderFuneralPage(data);
+                return;
+            } else {
+                showToast('만료되었거나 존재하지 않는 부고입니다');
+            }
+        } catch (e) {
+            console.error('부고 데이터 로드 오류:', e);
+        }
+    }
+
+    // 2. #funeral= 해시 체크 (기존 방식 호환)
     const hash = window.location.hash;
     if (hash.startsWith('#funeral=')) {
         try {
@@ -676,6 +705,11 @@ function checkHash() {
             console.error('부고 데이터 파싱 오류:', e);
         }
     }
+}
+
+// 기존 호환용
+function checkHash() {
+    checkUrl();
 }
 
 // ===== PWA 설치 프롬프트 =====
@@ -726,13 +760,15 @@ if ('serviceWorker' in navigator) {
 
 // ===== 초기화 =====
 window.addEventListener('load', () => {
-    checkHash();
+    checkUrl();
 
-    // 발인 날짜 기본값 설정 (내일)
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 2);
-    const dateStr = tomorrow.toISOString().split('T')[0];
+    // 발인 날짜 기본값 설정
     document.getElementById('funeralDate').setAttribute('min', new Date().toISOString().split('T')[0]);
+
+    // 만료 데이터 정리
+    if (typeof cleanupExpired === 'function') {
+        cleanupExpired();
+    }
 });
 
-window.addEventListener('hashchange', checkHash);
+window.addEventListener('hashchange', () => checkUrl());
