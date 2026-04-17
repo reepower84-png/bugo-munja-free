@@ -182,6 +182,8 @@ body {
     font-weight: 600;
     color: var(--text);
     margin-bottom: 6px;
+    word-break: keep-all;
+    line-height: 1.4;
 }
 
 .required {
@@ -584,6 +586,18 @@ body {
     font-size: 24px;
 }
 
+.fp-deceased-name {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.fp-deceased-term {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
 .fp-map {
     margin-top: 24px;
     border-radius: var(--radius);
@@ -653,6 +667,37 @@ body {
     .fp-title {
         font-size: 24px;
         letter-spacing: 8px;
+    }
+
+    .fp-flower-top img {
+        width: 64px;
+        height: 64px;
+    }
+
+    .fp-deceased-name {
+        font-size: 18px;
+    }
+
+    .fp-deceased-term {
+        font-size: 16px;
+    }
+
+    .fp-nav-btn {
+        font-size: 14px;
+        padding: 12px;
+    }
+
+    .fp-map iframe {
+        height: 220px;
+    }
+
+    .funeral-page-content {
+        padding: 28px 16px;
+    }
+
+    .account-item .form-row {
+        flex-direction: column;
+        gap: 0;
     }
 }
 
@@ -729,6 +774,40 @@ body {
         font-size: 12px;
         letter-spacing: 2px;
     }
+
+    .fp-flower-top img {
+        width: 56px;
+        height: 56px;
+    }
+
+    .fp-deceased-name {
+        font-size: 17px;
+    }
+
+    .fp-deceased-term {
+        font-size: 15px;
+    }
+
+    .fp-nav-btn {
+        font-size: 13px;
+        padding: 11px;
+    }
+
+    .fp-map iframe {
+        height: 200px;
+    }
+
+    .funeral-page-content {
+        padding: 24px 12px;
+    }
+
+    .fp-header {
+        margin-bottom: 20px;
+    }
+
+    .fp-footer {
+        margin-top: 20px;
+    }
 }
 
 /* 아주 작은 화면 (320px 이하) */
@@ -759,6 +838,33 @@ body {
 
     .card {
         padding: 14px 12px;
+    }
+
+    .fp-flower-top img {
+        width: 48px;
+        height: 48px;
+    }
+
+    .fp-deceased-name {
+        font-size: 16px;
+    }
+
+    .fp-deceased-term {
+        font-size: 14px;
+    }
+
+    .fp-title {
+        font-size: 20px;
+        letter-spacing: 6px;
+    }
+
+    .fp-nav-btn {
+        font-size: 12px;
+        padding: 10px;
+    }
+
+    .fp-map iframe {
+        height: 180px;
     }
 }
 

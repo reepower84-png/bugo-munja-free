@@ -620,8 +620,8 @@ function renderFuneralPage(data) {
 
     const term = data.deceasedTerm || '별세';
 
-    let body = `<div style="font-size:20px; font-weight:700; margin-bottom:4px;">${data.deceasedName}님 ${ageText}</div>
-<div style="font-size:18px; font-weight:600; margin-bottom:16px;">${term}를 알려드립니다.</div>
+    let body = `<div class="fp-deceased-name">${data.deceasedName}님 ${ageText}</div>
+<div class="fp-deceased-term">${term}를 알려드립니다.</div>
 
 ━━━
 
