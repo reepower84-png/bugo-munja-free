@@ -919,6 +919,7 @@ async function submitWreath() {
     const ribbon = ribbonTop || '삼가 고인의 명복을 빕니다';
 
     if (!selectedWreath) { showToast('화환을 선택해 주세요'); return; }
+    if (!orderName) { showToast('주문자 성함을 입력해 주세요'); return; }
     if (!receiverName) { showToast('받는분 성함을 입력해 주세요'); return; }
     if (!receiverPhone) { showToast('받는분 연락처를 입력해 주세요'); return; }
     if (!fromName) { showToast('보내는 분을 입력해 주세요'); return; }
