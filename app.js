@@ -737,6 +737,9 @@ ${formatDate(data.funeralDate)}${timeText}`;
         };
     }
 
+    // 부고 데이터 저장
+    currentFuneralData = data;
+
     // 조문 메시지 섹션 표시
     const condolenceSection = document.getElementById('fpCondolenceSection');
     condolenceSection.style.display = 'block';
@@ -751,6 +754,7 @@ ${formatDate(data.funeralDate)}${timeText}`;
 
 // ===== 현재 부고 ID 가져오기 =====
 let currentFuneralId = null;
+let currentFuneralData = null;
 
 function getFuneralId() {
     const params = new URLSearchParams(window.location.search);
@@ -874,22 +878,70 @@ function selectWreath(el, name, price) {
 
     const priceText = price ? price.toLocaleString() + '원' : '';
     document.getElementById('wreathSelectedInfo').textContent = `선택: ${name} / ${priceText}`;
+    document.getElementById('wreathPaymentAmount').textContent = `결제 금액: ${priceText}`;
     document.getElementById('wreathForm').style.display = 'block';
-    document.getElementById('wreathForm').scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    // 배송지 정보 자동 채우기
+    if (currentFuneralData) {
+        document.getElementById('wreathDeliveryHall').value = (currentFuneralData.funeralHall || '') + ' ' + (currentFuneralData.funeralRoom || '');
+        document.getElementById('wreathDeliveryAddr').value = currentFuneralData.funeralHallAddress || '';
+    }
+
+    document.getElementById('wreathForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// 리본 추천 토글
+function toggleRibbonSuggest() {
+    const list = document.getElementById('ribbonSuggestList');
+    list.style.display = list.style.display === 'none' ? 'block' : 'none';
+}
+
+function selectRibbon(text) {
+    document.getElementById('wreathRibbonBottom').value = text;
+    document.getElementById('ribbonSuggestList').style.display = 'none';
+}
+
+// 증빙서류 토글
+function toggleReceipt(type) {
+    document.getElementById('receiptCash').style.display = type === 'cash' ? 'block' : 'none';
+    document.getElementById('receiptTax').style.display = type === 'tax' ? 'block' : 'none';
 }
 
 async function submitWreath() {
-    const senderName = document.getElementById('wreathSenderName').value.trim();
-    const senderPhone = document.getElementById('wreathSenderPhone').value.trim();
-    const ribbon = document.getElementById('wreathRibbon').value.trim();
+    const receiverName = document.getElementById('wreathSenderName').value.trim();
+    const receiverPhone = document.getElementById('wreathSenderPhone').value.trim();
+    const orderName = document.getElementById('wreathOrderName').value.trim();
+    const orderPhone = document.getElementById('wreathOrderPhone').value.trim();
+    const ribbonTop = document.getElementById('wreathRibbonTop').value.trim();
+    const ribbonBottom = document.getElementById('wreathRibbonBottom').value.trim();
+    const fromName = document.getElementById('wreathFromName').value.trim();
+    const agree = document.getElementById('wreathAgree').checked;
+
+    const ribbon = [ribbonTop, ribbonBottom].filter(Boolean).join(' / ') || '삼가 고인의 명복을 빕니다';
 
     if (!selectedWreath) { showToast('화환을 선택해 주세요'); return; }
-    if (!senderName) { showToast('성함을 입력해 주세요'); return; }
-    if (!senderPhone) { showToast('연락처를 입력해 주세요'); return; }
+    if (!receiverName) { showToast('받는분 성함을 입력해 주세요'); return; }
+    if (!receiverPhone) { showToast('받는분 연락처를 입력해 주세요'); return; }
+    if (!agree) { showToast('개인정보 수집 및 이용에 동의해 주세요'); return; }
 
     if (!currentFuneralId || typeof db === 'undefined') {
         showToast('접수할 수 없습니다');
         return;
+    }
+
+    // 증빙서류 정보
+    const receiptType = document.querySelector('input[name="receipt"]:checked').value;
+    let receiptInfo = { type: receiptType };
+    if (receiptType === 'cash') {
+        receiptInfo.phone = document.getElementById('receiptPhone').value.trim();
+    } else if (receiptType === 'tax') {
+        receiptInfo.email = document.getElementById('taxEmail').value.trim();
+        receiptInfo.company = document.getElementById('taxCompany').value.trim();
+        receiptInfo.ceo = document.getElementById('taxCeo').value.trim();
+        receiptInfo.bizNo = document.getElementById('taxBizNo').value.trim();
+        receiptInfo.addr = document.getElementById('taxAddr').value.trim();
+        receiptInfo.bizType = document.getElementById('taxBizType').value.trim();
+        receiptInfo.bizItem = document.getElementById('taxBizItem').value.trim();
     }
 
     try {
@@ -898,33 +950,50 @@ async function submitWreath() {
             .add({
                 wreath: selectedWreath,
                 price: selectedWreathPrice,
-                senderName: senderName,
-                senderPhone: senderPhone,
-                ribbon: ribbon || '삼가 고인의 명복을 빕니다',
+                orderName: orderName,
+                orderPhone: orderPhone,
+                senderName: receiverName,
+                senderPhone: receiverPhone,
+                ribbon: ribbon,
+                fromName: fromName,
+                receipt: receiptInfo,
+                deliveryHall: document.getElementById('wreathDeliveryHall').value,
+                deliveryAddr: document.getElementById('wreathDeliveryAddr').value,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             });
 
-        // Discord 알림 - 화환 접수
+        // 텔레그램 알림 - 화환 접수
         sendDiscordNotification({
-            title: '🌷 화환 접수',
+            title: '화환 주문 접수',
             color: 0x8b5e3c,
             fields: [
                 { name: '화환', value: selectedWreath, inline: true },
                 { name: '금액', value: selectedWreathPrice ? selectedWreathPrice.toLocaleString() + '원' : '-', inline: true },
-                { name: '보내신 분', value: senderName, inline: true },
-                { name: '연락처', value: senderPhone, inline: true },
-                { name: '리본 문구', value: ribbon || '삼가 고인의 명복을 빕니다' },
+                { name: '주문자', value: orderName || '-', inline: true },
+                { name: '주문자 연락처', value: orderPhone || '-', inline: true },
+                { name: '받는분', value: receiverName, inline: true },
+                { name: '받는분 연락처', value: receiverPhone, inline: true },
+                { name: '리본 문구', value: ribbon },
+                { name: '보내는 분', value: fromName || '-' },
+                { name: '배송지', value: document.getElementById('wreathDeliveryHall').value || '-' },
+                { name: '증빙', value: receiptType === 'none' ? '신청안함' : receiptType },
                 { name: '부고 ID', value: currentFuneralId || '-' }
             ],
             footer: { text: '부고문자무료발송' },
             timestamp: new Date().toISOString()
         });
 
-        showToast('화환 접수가 완료되었습니다');
+        showToast('주문이 완료되었습니다');
         closeWreathModal();
+        // 폼 초기화
+        document.getElementById('wreathOrderName').value = '';
+        document.getElementById('wreathOrderPhone').value = '';
         document.getElementById('wreathSenderName').value = '';
         document.getElementById('wreathSenderPhone').value = '';
-        document.getElementById('wreathRibbon').value = '';
+        document.getElementById('wreathRibbonTop').value = '';
+        document.getElementById('wreathRibbonBottom').value = '';
+        document.getElementById('wreathFromName').value = '';
+        document.getElementById('wreathAgree').checked = false;
         loadWreathSenders();
     } catch (error) {
         showToast('접수에 실패했습니다. 다시 시도해 주세요');

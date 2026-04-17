@@ -956,6 +956,162 @@ body {
     margin-top: 8px;
 }
 
+.wreath-section-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #d4c5a9;
+    margin: 20px 0 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(212,197,169,0.2);
+}
+
+.wreath-section-title:first-of-type {
+    margin-top: 0;
+}
+
+.ribbon-suggest-row {
+    display: flex;
+    gap: 8px;
+}
+
+.ribbon-suggest-row input {
+    flex: 1;
+}
+
+.ribbon-suggest-btn {
+    padding: 8px 16px;
+    background: #d4c5a9;
+    color: #1e1e32;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.ribbon-suggest-list {
+    margin-top: 8px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(212,197,169,0.2);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.ribbon-option {
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #e0d8cc;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(212,197,169,0.1);
+    transition: background 0.15s;
+}
+
+.ribbon-option:last-child {
+    border-bottom: none;
+}
+
+.ribbon-option:hover,
+.ribbon-option:active {
+    background: rgba(212,197,169,0.15);
+}
+
+.wreath-payment-amount {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+    color: #f0c040;
+    padding: 16px;
+    background: rgba(240,192,64,0.1);
+    border-radius: 8px;
+    margin-bottom: 12px;
+}
+
+.wreath-bank-info {
+    text-align: center;
+    font-size: 14px;
+    color: #e0d8cc;
+    padding: 14px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(212,197,169,0.15);
+    line-height: 1.8;
+}
+
+.receipt-options {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+.receipt-radio {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #e0d8cc;
+    cursor: pointer;
+}
+
+.receipt-radio input {
+    accent-color: #d4c5a9;
+}
+
+.wreath-notice {
+    background: rgba(255,255,255,0.04);
+    border-radius: 8px;
+    padding: 14px 14px 14px 8px;
+    margin-bottom: 16px;
+}
+
+.wreath-notice ul {
+    list-style: none;
+    padding: 0;
+}
+
+.wreath-notice li {
+    font-size: 12px;
+    color: #b09a7a;
+    line-height: 1.7;
+    padding-left: 14px;
+    position: relative;
+    margin-bottom: 4px;
+}
+
+.wreath-notice li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: #8b7355;
+}
+
+.agree-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #e0d8cc;
+    cursor: pointer;
+    margin-bottom: 16px;
+    padding: 12px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 8px;
+}
+
+.agree-check input {
+    accent-color: #d4c5a9;
+    width: 18px;
+    height: 18px;
+}
+
+.wreath-order-btn {
+    font-size: 18px;
+    padding: 16px;
+    background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%) !important;
+    letter-spacing: 4px;
+}
+
 /* ===== 반응형 ===== */
 
 /* 일반 모바일 (480px 이하) */
