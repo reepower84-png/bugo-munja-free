@@ -577,7 +577,8 @@ body {
 
 .fp-condolence {
     color: #d4c5a9;
-    font-size: 14px;
+    font-size: 18px;
+    font-weight: 600;
     letter-spacing: 4px;
     margin: 16px 0;
 }
@@ -771,7 +772,7 @@ body {
     }
 
     .fp-condolence {
-        font-size: 12px;
+        font-size: 15px;
         letter-spacing: 2px;
     }
 
