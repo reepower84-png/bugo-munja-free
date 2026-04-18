@@ -1472,6 +1472,33 @@ body {
     }
 }
 
+/* ===== 고객센터 버튼 ===== */
+.btn-cs {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background: #FEE500;
+    color: #3C1E1E;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    margin-top: 10px;
+    letter-spacing: 1px;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.btn-cs:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(254,229,0,0.4);
+}
+
+.btn-cs:active {
+    transform: translateY(0);
+}
+
 /* ===== 사이트 푸터 ===== */
 .site-footer {
     text-align: center;
