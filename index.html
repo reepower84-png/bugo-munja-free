@@ -216,6 +216,7 @@
             </div>
 
             <button class="btn-primary" onclick="goToStep(2)">미리보기 →</button>
+            <button class="btn-reply" onclick="openReplyModal()">답례장 보내기</button>
             <a href="http://pf.kakao.com/_IvrCX/chat" target="_blank" class="btn-cs">고객센터 카카오톡 문의하기</a>
         </section>
 
@@ -525,6 +526,71 @@
                         <!-- 주문하기 -->
                         <button class="btn-primary wreath-order-btn" onclick="submitWreath()">주문하기</button>
                         <a href="http://pf.kakao.com/_IvrCX/chat" target="_blank" class="btn-cs">고객센터 카카오톡 문의하기</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 답례장 모달 -->
+        <div id="replyModal" class="wreath-modal" style="display:none;">
+            <div class="wreath-modal-content">
+                <div class="wreath-modal-header">
+                    <h3>답례장 보내기</h3>
+                    <button class="wreath-modal-close" onclick="closeReplyModal()">&times;</button>
+                </div>
+                <div class="wreath-modal-body">
+                    <div class="wreath-section-title">답례장 양식 선택</div>
+
+                    <div class="reply-options">
+                        <div class="reply-option" onclick="selectReply(this, 'general')">
+                            <div class="reply-option-title">1. 일반 감사</div>
+                            <div class="reply-option-preview">삼가 인사드립니다. 바쁘신 와중에도 장례에 참석하시어...</div>
+                        </div>
+                        <div class="reply-option" onclick="selectReply(this, 'christian')">
+                            <div class="reply-option-title">2. 기독교식</div>
+                            <div class="reply-option-preview">삼가 인사드립니다. 하나님의 은혜 가운데...</div>
+                        </div>
+                        <div class="reply-option" onclick="selectReply(this, 'catholic')">
+                            <div class="reply-option-title">3. 천주교식</div>
+                            <div class="reply-option-preview">삼가 인사드립니다. 주님의 은총 안에서...</div>
+                        </div>
+                        <div class="reply-option" onclick="selectReply(this, 'buddhist')">
+                            <div class="reply-option-title">4. 불교식</div>
+                            <div class="reply-option-preview">삼가 인사드립니다. 고인의 극락왕생을 기원해 주신...</div>
+                        </div>
+                    </div>
+
+                    <div id="replyPreview" class="reply-preview-box" style="display:none;">
+                        <div class="wreath-section-title">답례장 미리보기</div>
+                        <div id="replyPreviewText" class="reply-preview-text"></div>
+                    </div>
+
+                    <div id="replyShareBtns" class="reply-share-btns" style="display:none;">
+                        <div class="wreath-section-title">답례장 발송</div>
+                        <div class="share-buttons">
+                            <button class="share-btn kakao" onclick="shareReplyKakao()">
+                                <span class="share-icon">💬</span>
+                                <span>카카오톡 공유</span>
+                            </button>
+                            <button class="share-btn sms" onclick="shareReplySMS()">
+                                <span class="share-icon">📱</span>
+                                <span>SMS 문자 보내기</span>
+                            </button>
+                            <button class="share-btn copy" onclick="copyReplyMessage()">
+                                <span class="share-icon">📋</span>
+                                <span>문자 내용 복사</span>
+                            </button>
+                            <button class="share-btn link" onclick="shareReplyLink()">
+                                <span class="share-icon">🔗</span>
+                                <span>링크 공유</span>
+                            </button>
+                            <button class="share-btn native" onclick="shareReplyNative()" id="replyNativeShareBtn" style="display:none;">
+                                <span class="share-icon">📤</span>
+                                <span>공유하기</span>
+                            </button>
+                        </div>
+                        <div class="wreath-section-title">QR코드</div>
+                        <div id="replyQrCode" class="qr-container"></div>
                     </div>
                 </div>
             </div>

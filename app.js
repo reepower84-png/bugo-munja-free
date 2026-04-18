@@ -1058,6 +1058,121 @@ async function loadWreathSenders() {
     }
 }
 
+// ===== 답례장 =====
+const replyTemplates = {
+    general: `삼가 인사드립니다.
+바쁘신 와중에도 장례에 참석하시어
+따뜻한 위로와 조의를 베풀어 주신 데 대해
+깊이 감사드립니다.
+덕분에 무사히 장례를 마칠 수 있었습니다.
+베풀어주신 마음 오래도록 잊지 않겠습니다.`,
+    christian: `삼가 인사드립니다.
+바쁘신 가운데에도 장례에 함께하시어
+기도와 위로로 함께해 주심에 진심으로 감사드립니다.
+하나님의 은혜 가운데 장례를 무사히 마칠 수 있었습니다.
+베풀어주신 사랑과 위로를 오래도록 간직하겠습니다.`,
+    catholic: `삼가 인사드립니다.
+바쁘신 가운데에도 장례에 함께하시어
+기도와 위로를 베풀어 주심에 진심으로 감사드립니다.
+주님의 은총 안에서 장례를 무사히 마칠 수 있었습니다.
+베풀어주신 정성과 사랑을 오래도록 간직하겠습니다.`,
+    buddhist: `삼가 인사드립니다.
+바쁘신 가운데 장례에 함께하시어
+위로와 조의를 베풀어 주심에 깊이 감사드립니다.
+고인의 극락왕생을 기원해 주신 덕분에
+무사히 장례를 마칠 수 있었습니다.
+베풀어주신 공덕 깊이 간직하겠습니다.`
+};
+
+let selectedReplyType = null;
+let selectedReplyText = '';
+
+function openReplyModal() {
+    document.getElementById('replyModal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    selectedReplyType = null;
+    selectedReplyText = '';
+    document.querySelectorAll('.reply-option').forEach(o => o.classList.remove('selected'));
+    document.getElementById('replyPreview').style.display = 'none';
+    document.getElementById('replyShareBtns').style.display = 'none';
+}
+
+function closeReplyModal() {
+    document.getElementById('replyModal').style.display = 'none';
+    document.body.style.overflow = '';
+}
+
+function selectReply(el, type) {
+    document.querySelectorAll('.reply-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedReplyType = type;
+
+    // 상주 정보 가져오기
+    const data = getFormData();
+    const mournerText = data.mourners.map(m =>
+        m.relation ? `${m.relation} ${m.name}` : m.name
+    ).join(', ');
+
+    selectedReplyText = `[답례 인사]\n\n${replyTemplates[type]}\n\n상주 ${mournerText} 드림`;
+
+    document.getElementById('replyPreviewText').textContent = selectedReplyText;
+    document.getElementById('replyPreview').style.display = 'block';
+    document.getElementById('replyShareBtns').style.display = 'block';
+
+    if (navigator.share) {
+        document.getElementById('replyNativeShareBtn').style.display = 'flex';
+    }
+
+    // QR 코드
+    const baseUrl = window.location.origin + window.location.pathname;
+    const replyUrl = `${baseUrl}#reply=${btoa(unescape(encodeURIComponent(selectedReplyText)))}`;
+    const qrContainer = document.getElementById('replyQrCode');
+    qrContainer.innerHTML = `
+        <div style="width:160px; height:160px; margin:0 auto 12px; background:#f0f0f0; border-radius:12px; display:flex; align-items:center; justify-content:center;">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(replyUrl)}"
+                 alt="QR코드" width="140" height="140" style="border-radius:8px;"
+                 onerror="this.parentElement.innerHTML='<span style=font-size:40px>📱</span><br><span style=font-size:11px>QR 생성 불가</span>'">
+        </div>
+    `;
+
+    document.getElementById('replyPreview').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function shareReplyKakao() {
+    if (navigator.share) {
+        navigator.share({ title: '답례 인사', text: selectedReplyText }).catch(() => {
+            copyToClipboard(selectedReplyText);
+            showToast('내용이 복사되었습니다. 카카오톡에 붙여넣기 해주세요');
+        });
+    } else {
+        copyToClipboard(selectedReplyText);
+        showToast('내용이 복사되었습니다. 카카오톡에 붙여넣기 해주세요');
+    }
+}
+
+function shareReplySMS() {
+    const smsUrl = /iPhone|iPad/i.test(navigator.userAgent)
+        ? `sms:&body=${encodeURIComponent(selectedReplyText)}`
+        : `sms:?body=${encodeURIComponent(selectedReplyText)}`;
+    window.location.href = smsUrl;
+}
+
+function copyReplyMessage() {
+    copyToClipboard(selectedReplyText);
+    showToast('답례장이 복사되었습니다');
+}
+
+function shareReplyLink() {
+    const baseUrl = window.location.origin + window.location.pathname;
+    const replyUrl = `${baseUrl}#reply=${btoa(unescape(encodeURIComponent(selectedReplyText)))}`;
+    copyToClipboard(replyUrl);
+    showToast('링크가 복사되었습니다');
+}
+
+function shareReplyNative() {
+    navigator.share({ title: '답례 인사', text: selectedReplyText }).catch(() => {});
+}
+
 // ===== URL 체크 (공유 링크 처리) =====
 async function checkUrl() {
     // 1. ?id= 파라미터 체크 (Firebase 짧은 URL)

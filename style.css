@@ -1472,6 +1472,92 @@ body {
     }
 }
 
+/* ===== 답례장 버튼 ===== */
+.btn-reply {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 10px;
+    letter-spacing: 1px;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.btn-reply:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(139,115,85,0.3);
+}
+
+.btn-reply:active {
+    transform: translateY(0);
+}
+
+/* 답례장 옵션 */
+.reply-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.reply-option {
+    padding: 14px;
+    background: rgba(255,255,255,0.05);
+    border: 2px solid transparent;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.reply-option:active {
+    transform: scale(0.98);
+}
+
+.reply-option.selected {
+    border-color: #d4c5a9;
+    background: rgba(212,197,169,0.1);
+}
+
+.reply-option-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #d4c5a9;
+    margin-bottom: 6px;
+}
+
+.reply-option-preview {
+    font-size: 12px;
+    color: #8b7355;
+    line-height: 1.4;
+}
+
+.reply-preview-box {
+    margin-bottom: 16px;
+}
+
+.reply-preview-text {
+    background: rgba(255,255,255,0.06);
+    border-radius: 10px;
+    padding: 20px;
+    font-size: 14px;
+    color: #e0d8cc;
+    line-height: 2;
+    white-space: pre-line;
+    text-align: center;
+    border: 1px solid rgba(212,197,169,0.15);
+}
+
+.reply-share-btns {
+    margin-top: 8px;
+}
+
 /* ===== 고객센터 버튼 ===== */
 .btn-cs {
     display: block;
