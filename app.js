@@ -1115,7 +1115,7 @@ function selectReply(el, type) {
 
     selectedReplyText = `[답례 인사]\n\n${replyTemplates[type]}\n\n상주 ${mournerText} 드림`;
 
-    document.getElementById('replyPreviewText').textContent = selectedReplyText;
+    document.getElementById('replyPreviewText').value = selectedReplyText;
     document.getElementById('replyPreview').style.display = 'block';
     document.getElementById('replyShareBtns').style.display = 'block';
 
