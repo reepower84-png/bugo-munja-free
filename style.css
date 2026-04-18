@@ -1216,6 +1216,36 @@ body {
     .wreath-item span {
         font-size: 11px;
     }
+
+    .wreath-payment-amount {
+        font-size: 18px;
+        padding: 12px;
+    }
+
+    .wreath-order-btn {
+        font-size: 16px;
+        padding: 14px;
+        letter-spacing: 2px;
+    }
+
+    .ribbon-suggest-btn {
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+
+    .fp-address-row {
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .fp-wreath-sender-item {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .fp-wreath-sender-date {
+        align-self: flex-end;
+    }
 }
 
 /* 작은 모바일 (380px 이하) */
@@ -1348,6 +1378,39 @@ body {
 
     .wreath-modal-content {
         max-height: 85vh;
+    }
+
+    .ribbon-suggest-row {
+        flex-direction: column;
+    }
+
+    .ribbon-suggest-btn {
+        width: 100%;
+    }
+
+    .wreath-payment-amount {
+        font-size: 16px;
+        padding: 10px;
+    }
+
+    .wreath-order-btn {
+        font-size: 15px;
+        padding: 12px;
+        letter-spacing: 1px;
+    }
+
+    .receipt-options {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .agree-check {
+        font-size: 12px;
+        padding: 10px;
+    }
+
+    .site-biz-info {
+        padding-bottom: 60px;
     }
 }
 
