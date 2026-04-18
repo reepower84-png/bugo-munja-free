@@ -87,7 +87,7 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label>관계 <span class="required">*</span></label>
-                                <select class="mournerRelation">
+                                <select class="mournerRelation" onchange="toggleCustomRelation(this)">
                                     <option value="">선택</option>
                                     <option value="장남">장남</option>
                                     <option value="차남">차남</option>
@@ -101,7 +101,9 @@
                                     <option value="형제">형제</option>
                                     <option value="자매">자매</option>
                                     <option value="기타">기타</option>
+                                    <option value="__custom__">직접입력</option>
                                 </select>
+                                <input type="text" class="mournerRelationCustom" placeholder="관계를 직접 입력하세요" style="display:none; margin-top:6px;">
                             </div>
                             <div class="form-group">
                                 <label>성함 <span class="required">*</span></label>

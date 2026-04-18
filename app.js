@@ -91,7 +91,11 @@ function getMourners() {
     const items = document.querySelectorAll('.mourner-item');
     const mourners = [];
     items.forEach(item => {
-        const relation = item.querySelector('.mournerRelation').value;
+        let relation = item.querySelector('.mournerRelation').value;
+        const customInput = item.querySelector('.mournerRelationCustom');
+        if (relation === '__custom__' && customInput) {
+            relation = customInput.value.trim();
+        }
         const name = item.querySelector('.mournerName').value.trim();
         if (name) {
             mourners.push({ relation, name });
@@ -108,7 +112,7 @@ function addMourner() {
         <div class="form-row">
             <div class="form-group">
                 <label>관계</label>
-                <select class="mournerRelation">
+                <select class="mournerRelation" onchange="toggleCustomRelation(this)">
                     <option value="">선택</option>
                     <option value="장남">장남</option>
                     <option value="차남">차남</option>
@@ -122,7 +126,9 @@ function addMourner() {
                     <option value="형제">형제</option>
                     <option value="자매">자매</option>
                     <option value="기타">기타</option>
+                    <option value="__custom__">직접입력</option>
                 </select>
+                <input type="text" class="mournerRelationCustom" placeholder="관계를 직접 입력하세요" style="display:none; margin-top:6px;">
             </div>
             <div class="form-group">
                 <label>성함</label>
@@ -136,6 +142,18 @@ function addMourner() {
 
 function removeMourner(btn) {
     btn.closest('.mourner-item').remove();
+}
+
+// 직접입력 토글
+function toggleCustomRelation(selectEl) {
+    const customInput = selectEl.parentElement.querySelector('.mournerRelationCustom');
+    if (selectEl.value === '__custom__') {
+        customInput.style.display = 'block';
+        customInput.focus();
+    } else {
+        customInput.style.display = 'none';
+        customInput.value = '';
+    }
 }
 
 // ===== 계좌 관리 =====
@@ -575,7 +593,7 @@ function resetForm() {
             <div class="form-row">
                 <div class="form-group">
                     <label>관계 <span class="required">*</span></label>
-                    <select class="mournerRelation">
+                    <select class="mournerRelation" onchange="toggleCustomRelation(this)">
                         <option value="">선택</option>
                         <option value="장남">장남</option>
                         <option value="차남">차남</option>
@@ -589,7 +607,9 @@ function resetForm() {
                         <option value="형제">형제</option>
                         <option value="자매">자매</option>
                         <option value="기타">기타</option>
+                        <option value="__custom__">직접입력</option>
                     </select>
+                    <input type="text" class="mournerRelationCustom" placeholder="관계를 직접 입력하세요" style="display:none; margin-top:6px;">
                 </div>
                 <div class="form-group">
                     <label>성함 <span class="required">*</span></label>
