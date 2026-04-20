@@ -467,7 +467,7 @@
                         <div class="receipt-options">
                             <label class="receipt-radio"><input type="radio" name="receipt" value="none" checked onchange="toggleReceipt('none')"> 신청안함</label>
                             <label class="receipt-radio"><input type="radio" name="receipt" value="cash" onchange="toggleReceipt('cash')"> 현금영수증</label>
-                            <label class="receipt-radio"><input type="radio" name="receipt" value="tax" onchange="toggleReceipt('tax')"> 세금계산서</label>
+                            <label class="receipt-radio"><input type="radio" name="receipt" value="tax" onchange="toggleReceipt('tax')"> 지출증빙</label>
                         </div>
                         <div id="receiptCash" style="display:none;">
                             <div class="form-group">
@@ -477,32 +477,12 @@
                         </div>
                         <div id="receiptTax" style="display:none;">
                             <div class="form-group">
-                                <label>이메일 주소</label>
-                                <input type="email" id="taxEmail" placeholder="예: example@email.com">
-                            </div>
-                            <div class="form-group">
                                 <label>상호</label>
                                 <input type="text" id="taxCompany" placeholder="상호명">
                             </div>
                             <div class="form-group">
-                                <label>대표자명</label>
-                                <input type="text" id="taxCeo" placeholder="대표자명">
-                            </div>
-                            <div class="form-group">
                                 <label>사업자번호</label>
                                 <input type="text" id="taxBizNo" placeholder="예: 123-45-67890">
-                            </div>
-                            <div class="form-group">
-                                <label>사업장 소재지</label>
-                                <input type="text" id="taxAddr" placeholder="사업장 주소">
-                            </div>
-                            <div class="form-group">
-                                <label>업태</label>
-                                <input type="text" id="taxBizType" placeholder="업태">
-                            </div>
-                            <div class="form-group">
-                                <label>종목</label>
-                                <input type="text" id="taxBizItem" placeholder="종목">
                             </div>
                         </div>
 

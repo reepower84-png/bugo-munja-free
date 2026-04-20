@@ -956,13 +956,8 @@ async function submitWreath() {
     if (receiptType === 'cash') {
         receiptInfo.phone = document.getElementById('receiptPhone').value.trim();
     } else if (receiptType === 'tax') {
-        receiptInfo.email = document.getElementById('taxEmail').value.trim();
         receiptInfo.company = document.getElementById('taxCompany').value.trim();
-        receiptInfo.ceo = document.getElementById('taxCeo').value.trim();
         receiptInfo.bizNo = document.getElementById('taxBizNo').value.trim();
-        receiptInfo.addr = document.getElementById('taxAddr').value.trim();
-        receiptInfo.bizType = document.getElementById('taxBizType').value.trim();
-        receiptInfo.bizItem = document.getElementById('taxBizItem').value.trim();
     }
 
     try {

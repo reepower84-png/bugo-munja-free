@@ -666,14 +666,9 @@
                     if (d.receipt.type === 'cash') {
                         receiptText = '현금영수증<br>연락처: ' + (d.receipt.phone || '-');
                     } else if (d.receipt.type === 'tax') {
-                        receiptText = '세금계산서'
-                            + '<br>이메일: ' + (d.receipt.email || '-')
+                        receiptText = '지출증빙'
                             + '<br>상호: ' + (d.receipt.company || '-')
-                            + '<br>대표자명: ' + (d.receipt.ceo || '-')
-                            + '<br>사업자번호: ' + (d.receipt.bizNo || '-')
-                            + '<br>소재지: ' + (d.receipt.addr || '-')
-                            + '<br>업태: ' + (d.receipt.bizType || '-')
-                            + '<br>종목: ' + (d.receipt.bizItem || '-');
+                            + '<br>사업자번호: ' + (d.receipt.bizNo || '-');
                     }
                 }
 
