@@ -991,7 +991,8 @@ async function submitWreath() {
                 { name: '받는분 연락처', value: receiverPhone, inline: true },
                 { name: '리본 문구', value: ribbon },
                 { name: '보내는 분', value: fromName || '-' },
-                { name: '배송지', value: document.getElementById('wreathDeliveryHall').value || '-' },
+                { name: '배송지(장례식장)', value: document.getElementById('wreathDeliveryHall').value || '-' },
+                { name: '배송지(주소)', value: document.getElementById('wreathDeliveryAddr').value || '-' },
                 { name: '증빙', value: receiptType === 'none' ? '신청안함' : receiptType },
                 { name: '부고 ID', value: currentFuneralId || '-' }
             ],
