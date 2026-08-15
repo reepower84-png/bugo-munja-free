@@ -1020,6 +1020,7 @@ async function submitWreath() {
 // 접수 전에도 이름/문구가 어떻게 노출되는지 보이도록 항상 깔아두는 기본 문구
 const DEFAULT_WREATH_SENDER = {
     fromName: '365전국플라워 임직원 일동',
+    wreath: '근조 3단 화환',
     ribbon: '삼가 故人의 冥福을 빕니다'
 };
 
@@ -1063,7 +1064,11 @@ async function loadWreathSenders() {
     }
 
     // 기본 문구는 실제 주문건 아래에 항상 표시
-    itemsHtml += wreathSenderItemHtml(DEFAULT_WREATH_SENDER.fromName, DEFAULT_WREATH_SENDER.ribbon, '');
+    itemsHtml += wreathSenderItemHtml(
+        `${DEFAULT_WREATH_SENDER.fromName} - ${DEFAULT_WREATH_SENDER.wreath}`,
+        DEFAULT_WREATH_SENDER.ribbon,
+        ''
+    );
 
     listEl.innerHTML = '<div class="fp-wreath-sender-title">근조화환 보내신 분</div>' + itemsHtml;
 }
