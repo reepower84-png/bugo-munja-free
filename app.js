@@ -1017,41 +1017,55 @@ async function submitWreath() {
 }
 
 // ===== 화환 보내신 분 목록 =====
-async function loadWreathSenders() {
-    if (!currentFuneralId || typeof db === 'undefined') return;
+// 접수 전에도 이름/문구가 어떻게 노출되는지 보이도록 항상 깔아두는 기본 문구
+const DEFAULT_WREATH_SENDER = {
+    fromName: '365전국플라워 임직원 일동',
+    ribbon: '삼가 故人의 冥福을 빕니다'
+};
 
-    const listEl = document.getElementById('fpWreathSenderList');
-
-    try {
-        const snapshot = await db.collection('funerals').doc(currentFuneralId)
-            .collection('wreaths')
-            .orderBy('createdAt', 'desc')
-            .get();
-
-        if (snapshot.empty) {
-            listEl.innerHTML = '';
-            return;
-        }
-
-        let html = '<div class="fp-wreath-sender-title">근조화환 보내신 분</div>';
-
-        snapshot.forEach(doc => {
-            const d = doc.data();
-            const date = d.createdAt ? formatCondolenceTime(d.createdAt.toDate()) : '';
-            html += `
+function wreathSenderItemHtml(name, ribbon, date) {
+    return `
                 <div class="fp-wreath-sender-item">
                     <div>
-                        <div class="fp-wreath-sender-name">${escapeHtml(d.senderName)} - ${escapeHtml(d.wreath)}</div>
-                        <div class="fp-wreath-sender-ribbon">${escapeHtml(d.ribbon || '삼가 고인의 명복을 빕니다')}</div>
+                        <div class="fp-wreath-sender-name">${escapeHtml(name)}</div>
+                        <div class="fp-wreath-sender-ribbon">${escapeHtml(ribbon)}</div>
                     </div>
                     <div class="fp-wreath-sender-date">${date}</div>
                 </div>`;
-        });
+}
 
-        listEl.innerHTML = html;
-    } catch (e) {
-        // 조용히 실패
+async function loadWreathSenders() {
+    const listEl = document.getElementById('fpWreathSenderList');
+    if (!listEl) return;
+
+    let itemsHtml = '';
+
+    if (currentFuneralId && typeof db !== 'undefined') {
+        try {
+            const snapshot = await db.collection('funerals').doc(currentFuneralId)
+                .collection('wreaths')
+                .orderBy('createdAt', 'desc')
+                .get();
+
+            snapshot.forEach(doc => {
+                const d = doc.data();
+                const date = d.createdAt ? formatCondolenceTime(d.createdAt.toDate()) : '';
+                const from = d.fromName || d.senderName || '';
+                itemsHtml += wreathSenderItemHtml(
+                    d.wreath ? `${from} - ${d.wreath}` : from,
+                    d.ribbon || '삼가 고인의 명복을 빕니다',
+                    date
+                );
+            });
+        } catch (e) {
+            // 조용히 실패 - 기본 문구만 노출
+        }
     }
+
+    // 기본 문구는 실제 주문건 아래에 항상 표시
+    itemsHtml += wreathSenderItemHtml(DEFAULT_WREATH_SENDER.fromName, DEFAULT_WREATH_SENDER.ribbon, '');
+
+    listEl.innerHTML = '<div class="fp-wreath-sender-title">근조화환 보내신 분</div>' + itemsHtml;
 }
 
 // ===== 답례장 =====
