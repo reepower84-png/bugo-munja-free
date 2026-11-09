@@ -819,7 +819,8 @@
         }
 
         // ===== Discord 알림 전송 (관리자 페이지에서 실행) =====
-        const DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1568804141596278824/uecigjww-scKNnHcKCY9z57je0X6BKJ7dw1Zg-ZkoKDAvkm_vUyLxGiW7BKz1XRp1UoX';
+        // 웹후크 주소는 화면 코드에 두지 않고 중계 서버(122. 디스코드중계)를 거친다 — 2026-11-07 공개된 주소가 지워져 알림이 끊겼다.
+        const DISCORD_WEBHOOK = 'https://discord-relay-gold-gamma.vercel.app/api/send?site=bugo';
 
         async function processNotifications() {
             try {
